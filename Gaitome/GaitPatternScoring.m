@@ -35,7 +35,7 @@ aPDon_idx = tdat(:, 1) == 5;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Select groups for analysis %
-groups = [0, 4]; %%%%%%%%%%%%%
+groups = [0, 5]; %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % PCA and scoring of gait pattern
@@ -45,7 +45,7 @@ groups = [0, 4]; %%%%%%%%%%%%%
 % PlotParameterRegression(tdat, ngdat_p, cngdat, GIS_Yz, 'height');
 
 % Plot gait pattern bar graph
-PlotGaitPattern(GIS_Yz, groups);
+% PlotGaitPattern(GIS_Yz, groups);
 
 % Plot and compare multiple group pattern score
 PlotPatternScore(tdat, cngdat, GIS_Yz, groups);

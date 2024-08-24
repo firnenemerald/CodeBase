@@ -75,6 +75,13 @@ se_aPDon = std(score_aPDon)/sqrt(length(score_aPDon));
 %% Statistical analysis (ANOVA post-hoc Tukey)
 score = [score_HC; score_RBD; score_ePD; score_aPDoff; score_aPDon];
 [p, table, stats] = anova1(score, group, 'on');
+headingObj = findall(0,'Type','uicontrol','Tag','Heading');
+headingObj(1).String = [expTitle, 'ANOVA table'];
+
+[c, ~, ~, gnames] = multcompare(stats, 'alpha', 0.05, 'ctype', 'hsd');
+tbl = array2table(c,"VariableNames", ["Group A","Group B","Lower Limit","A-B","Upper Limit","P-value"]);
+tbl.("Group A") = gnames(tbl.("Group A"));
+tbl.("Group B") = gnames(tbl.("Group B"))
 
 %% Draw bar graph
 figure;
