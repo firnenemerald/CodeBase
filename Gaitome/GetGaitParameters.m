@@ -62,32 +62,32 @@ function [tdat, ngdat, ngdat_p] = GetGaitParameters()
 
 %% Import raw data (.xlsx from gait extractor)
 % Import HC_tdat
-HC_data = readtable('data\HC_tdat.xlsx', 'VariableNamingRule', 'preserve');
+HC_data = readtable('..\data\HC_tdat.xlsx', 'VariableNamingRule', 'preserve');
 HC_numeric = HC_data{:, vartype('numeric')};
 HC_tdat = HC_numeric(:,2:28);
 
 % Import RBD_tdat
-RBD_data = readtable('data\RBD_tdat.xlsx', 'VariableNamingRule', 'preserve');
+RBD_data = readtable('..\data\RBD_tdat.xlsx', 'VariableNamingRule', 'preserve');
 RBD_numeric = RBD_data{:, vartype('numeric')};
 RBD_tdat = RBD_numeric(:,2:28);
 
 % Import MSAC_tdat
-MSAC_data = readtable('data\MSAC_tdat.xlsx', 'VariableNamingRule', 'preserve');
+MSAC_data = readtable('..\data\MSAC_tdat.xlsx', 'VariableNamingRule', 'preserve');
 MSAC_numeric = MSAC_data{:, vartype('numeric')};
 MSAC_tdat = MSAC_numeric(:,2:28);
 
 % Import ePD_tdat
-ePD_data = readtable('data\ePD_tdat.xlsx', 'VariableNamingRule', 'preserve');
+ePD_data = readtable('..\data\ePD_tdat.xlsx', 'VariableNamingRule', 'preserve');
 ePD_numeric = ePD_data{:, vartype('numeric')};
 ePD_tdat = ePD_numeric(:,2:28);
 
 % Import aPDoff_tdat
-aPDoff_data = readtable('data\aPDoff_tdat.xlsx', 'VariableNamingRule', 'preserve');
+aPDoff_data = readtable('..\data\aPDoff_tdat.xlsx', 'VariableNamingRule', 'preserve');
 aPDoff_numeric = aPDoff_data{:, vartype('numeric')};
 aPDoff_tdat = aPDoff_numeric(:,2:28);
 
 % Import aPDon_tdat
-aPDon_data = readtable('data\aPDon_tdat.xlsx', 'VariableNamingRule', 'preserve');
+aPDon_data = readtable('..\data\aPDon_tdat.xlsx', 'VariableNamingRule', 'preserve');
 aPDon_numeric = aPDon_data{:, vartype('numeric')};
 aPDon_tdat = aPDon_numeric(:,2:28);
 
