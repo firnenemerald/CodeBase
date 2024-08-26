@@ -30,7 +30,7 @@ switch paramLength
         bar_xlabel = {'step length', 'step length (cv)', 'step time', 'step time (cv)','step width', 'step width (cv)', 'cadence', 'velocity', 'step length asymmetry', 'arm swing asymmetry', 'turning time', 'turning time (cv)', 'turning step length', 'turning step length (cv)', 'turning step time', 'turning step time(cv)', 'turning step width', 'turning step width (cv)', 'turning step number', 'turning step number (cv)', 'turning cadence', 'turning velocity'};
 end
 
-% Standard bar graph for gait pattern
+%% Standard bar graph for gait pattern
 figure;
 hold on
 
@@ -69,72 +69,38 @@ ax.XAxis.TickLabelInterpreter = 'tex';
 
 hold off
 
-% Heatmap for gait pattern
+%% Heatmap for gait pattern
+
+% Create custom colormap with white for the range [-1, 1] and gradient outside
+
+data = GIS_Yz';
+cmap = [linspace(0, 1, 128)', linspace(0, 1, 128)', ones(128,1); ...  % Blue to white
+        ones(128,1), linspace(1, 0, 128)', linspace(1, 0, 128)'];     % White to red
+
+% Plot the heatmap
 figure;
-hold on
-
-hm_data = GIS_Yz;
-for idx = 1:paramLength
-    if GIS_Yz(idx) > 1
-        hm_data(idx) = GIS_Yz(idx);
-    elseif GIS_Yz(idx) < -1
-        hm_data(idx) = GIS_Yz(idx);
-    else
-        hm_data(idx) = 0;
-    end
-end
-
-numColors = 256;
-colormap(customColormap(numColors));
-
-imagesc(hm_data');
+imagesc(data);
+colormap(cmap);
 colorbar;
+clim([-3, 3]);
 
-[numRows, numCols] = size(hm_data');
-for row = 1:numRows
-    for col = 1:numCols
-        text(col, row, num2str(hm_data(col, row), '%0.2f'), ...
-             'HorizontalAlignment', 'center', ...
-             'VerticalAlignment', 'middle');
-    end
-end
-
-title(expTitle);
-subtitle('Gait pattern heatmap');
-xlabel('Gait parameters');
-ylabel(colorbar, 'Gait pattern (normalized)');
-
-xticks(1:paramLength)
+% Set x-ticks and labels
+xticks(1:16);
 xticklabels(bar_xlabel);
+xtickangle(45); % Rotate x-tick labels
 
-set(gca, 'GridColor', 'k');  % Set grid color to black
-set(gca, 'GridLineStyle', '-');
-set(gca, 'LineWidth', 1.5);
-grid on;  % Enable grid
-axis equal tight;  % Equal scaling and tight fitting
+% Set y-tick label
+yticks(1);
+yticklabels({'Z-score'});
 
-hold off
-
+% Annotate each cell with the corresponding GIS_Yz value
+for i = 1:length(GIS_Yz)
+    text(i, 1, sprintf('%.2f', GIS_Yz(i)), 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
 end
 
-function cmap = customColormap(numColors)
-    cmap = zeros(numColors, 3); % Initialize a numColors-by-3 matrix to hold RGB values
+% Set labels and title
+title(expTitle);
+xlabel('Gait parameters');
+ylabel('Z-score');
 
-    % Middle of the colormap (for values close to zero)
-    middleIndex = floor(numColors/2);
-
-    % Intensify red for positive values
-    for i = middleIndex+1:numColors
-        intensity = (i - middleIndex) / (numColors - middleIndex);
-        cmap(i, :) = [1, 1-intensity, 1-intensity]; % Fill with shades of red
-    end
-
-    % Intensify blue for negative values
-    for i = 1:middleIndex
-        intensity = (middleIndex - i + 1) / middleIndex;
-        cmap(i, :) = [1-intensity, 1-intensity, 1]; % Fill with shades of blue
-    end
-
-    % Neutral color at middleIndex
-    cmap(middleIndex, :) = [1, 1, 1]; % White or choose another neutral color
 end
