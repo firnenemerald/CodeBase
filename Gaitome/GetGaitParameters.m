@@ -58,7 +58,7 @@
 % 23 - anterior flexion angle
 % 24 - dropped head angle
 
-function [tdat, ngdat, ngdat_p] = GetGaitParameters()
+function [tdat, ngdat, ngdat_p, RBD_updrs, aPDoff_updrs] = GetGaitParameters()
 
 %% Import raw data (.xlsx from gait extractor)
 % Import HC_tdat
@@ -69,7 +69,8 @@ HC_tdat = HC_numeric(:,2:28);
 % Import RBD_tdat
 RBD_data = readtable('data\RBD_tdat.xlsx', 'VariableNamingRule', 'preserve');
 RBD_numeric = RBD_data{:, vartype('numeric')};
-RBD_tdat = RBD_numeric(:,2:28);
+RBD_tdat = RBD_numeric(:, 2:28);
+RBD_updrs = RBD_numeric(:, 29:31);
 
 % Import MSAC_tdat
 MSAC_data = readtable('data\MSAC_tdat.xlsx', 'VariableNamingRule', 'preserve');
@@ -84,7 +85,8 @@ ePD_tdat = ePD_numeric(:,2:28);
 % Import aPDoff_tdat
 aPDoff_data = readtable('data\aPDoff_tdat.xlsx', 'VariableNamingRule', 'preserve');
 aPDoff_numeric = aPDoff_data{:, vartype('numeric')};
-aPDoff_tdat = aPDoff_numeric(:,2:28);
+aPDoff_tdat = aPDoff_numeric(:, 2:28);
+aPDoff_updrs = aPDoff_numeric(:, 29:31);
 
 % Import aPDon_tdat
 aPDon_data = readtable('data\aPDon_tdat.xlsx', 'VariableNamingRule', 'preserve');
@@ -107,8 +109,11 @@ aPDon = [5*ones(size(aPDon_tdat, 1), 1), aPDon_tdat];
 aPDon(any(isnan(aPDon), 2), :) = [];
 
 % Remove outliers
+RBD(30, :) = [];
+RBD_updrs(30, :) = [];
 ePD(1, :) = [];
-aPDon(24, :) = [];
+aPDoff(24, :) = [];
+aPDoff_updrs(24, :) = [];
 
 tdat = [HC; RBD; MSAC; ePD; aPDoff; aPDon];
 
