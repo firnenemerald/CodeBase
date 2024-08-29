@@ -20,7 +20,7 @@ clear
 close all
 
 % Import gait parameters
-[tdat, ngdat, ngdat_p, RBD_updrs, aPDoff_updrs] = GetGaitParameters();
+[tdat, ngdat_p, RBD_updrs, ePD_updrs, aPDoff_updrs, aPDon_updrs] = GetGaitParameters();
 
 % Get each group's indices
 HC_idx = tdat(:, 1) == 0;
@@ -55,10 +55,20 @@ RBD_u2 = RBD_updrs(:, 2);
 RBD_u3 = RBD_updrs(:, 3);
 RBD_ut = RBD_u1 + RBD_u2 + RBD_u3;
 
+ePD_u1 = ePD_updrs(:, 1);
+ePD_u2 = ePD_updrs(:, 2);
+ePD_u3 = ePD_updrs(:, 3);
+ePD_ut = ePD_u1 + ePD_u2 + ePD_u3;
+
 aPDoff_u1 = aPDoff_updrs(:, 1);
 aPDoff_u2 = aPDoff_updrs(:, 2);
 aPDoff_u3 = aPDoff_updrs(:, 3);
 aPDoff_ut = aPDoff_u1 + aPDoff_u2 + aPDoff_u3;
+
+aPDon_u1 = aPDon_updrs(:, 1);
+aPDon_u2 = aPDon_updrs(:, 2);
+aPDon_u3 = aPDon_updrs(:, 3);
+aPDon_ut = aPDon_u1 + aPDon_u2 + aPDon_u3;
 
 % Do multivariate linear regression
 cngdat = GaitPatternMLR(tdat, ngdat_p);
@@ -73,7 +83,7 @@ cngdat_aPDon = cngdat(aPDon_idx, :);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Select groups for analysis %
-groups = [0, 4]; %%%%%%%%%%%%%
+groups = [0, 2]; %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % PCA and scoring of gait pattern
@@ -98,3 +108,5 @@ PlotGaitPattern(GIS_Yz, groups);
 
 % Plot and compare multiple group pattern score
 % PlotPatternScore(tdat, cngdat, GIS_Yz, groups);
+
+PlotCustomBar(score_HC, score_MSAC);

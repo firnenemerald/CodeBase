@@ -18,12 +18,12 @@
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 %% Data description & coding
-% HC_tdat = 30 healthy controls' gait parameters
-% RBD_tdat = 60 RBD patients' gait parameters
-% MSAC_tdat = 30 MSA patients' gait parameters
-% ePD_tdat = 44 early PD patients' gait parameters
-% aPDoff_tdat = 33 medication off advanced PD patients' gait parameters
-% aPDon_tdat = ?? medication on advanced PD patients' gait parameters
+% HC_tdat = 30 healthy controls' (age + sex + height) + 24 gait parameters
+% RBD_tdat = 60 RBD patients' (age + sex + height) + gait parameters + UPDRS scores
+% MSAC_tdat = 36 MSA patients' (age + sex + height) + gait parameters
+% ePD_tdat = 44 early PD patients' (age + sex + height) + gait parameters + UPDRS scores
+% aPDoff_tdat = 33 medication off advanced PD patients' (age + sex + height) + gait parameters + UPDRS scores
+% aPDon_tdat = ?? medication on advanced PD patients' (age + sex + height) + gait parameters + UPDRS scores
 
 % Each tdat data is sorted by age
 % Sex 1 = Female, 2 = Male
@@ -58,7 +58,7 @@
 % 23 - anterior flexion angle
 % 24 - dropped head angle
 
-function [tdat, ngdat, ngdat_p, RBD_updrs, aPDoff_updrs] = GetGaitParameters()
+function [tdat, ngdat_p, RBD_updrs, ePD_updrs, aPDoff_updrs, aPDon_updrs] = GetGaitParameters()
 
 %% Import raw data (.xlsx from gait extractor)
 % Import HC_tdat
@@ -81,6 +81,7 @@ MSAC_tdat = MSAC_numeric(:,2:28);
 ePD_data = readtable('data\ePD_tdat.xlsx', 'VariableNamingRule', 'preserve');
 ePD_numeric = ePD_data{:, vartype('numeric')};
 ePD_tdat = ePD_numeric(:,2:28);
+ePD_updrs = ePD_numeric(:, 29:31);
 
 % Import aPDoff_tdat
 aPDoff_data = readtable('data\aPDoff_tdat.xlsx', 'VariableNamingRule', 'preserve');
@@ -92,21 +93,15 @@ aPDoff_updrs = aPDoff_numeric(:, 29:31);
 aPDon_data = readtable('data\aPDon_tdat.xlsx', 'VariableNamingRule', 'preserve');
 aPDon_numeric = aPDon_data{:, vartype('numeric')};
 aPDon_tdat = aPDon_numeric(:,2:28);
+aPDon_updrs = aPDon_numeric(:, 29:31);
 
-% Concatenate data into a single variable
-% Remove data with NaN element
+% Structure data
 HC = [0*ones(size(HC_tdat, 1), 1), HC_tdat];
-HC(any(isnan(HC), 2), :) = [];
 RBD = [1*ones(size(RBD_tdat, 1), 1), RBD_tdat];
-RBD(any(isnan(RBD), 2), :) = [];
 MSAC = [2*ones(size(MSAC_tdat, 1), 1), MSAC_tdat];
-MSAC(any(isnan(MSAC), 2), :) = [];
 ePD = [3*ones(size(ePD_tdat, 1), 1), ePD_tdat];
-ePD(any(isnan(ePD), 2), :) = [];
 aPDoff = [4*ones(size(aPDoff_tdat, 1), 1), aPDoff_tdat];
-aPDoff(any(isnan(aPDoff), 2), :) = [];
 aPDon = [5*ones(size(aPDon_tdat, 1), 1), aPDon_tdat];
-aPDon(any(isnan(aPDon), 2), :) = [];
 
 % Remove outliers
 RBD(30, :) = [];
@@ -115,28 +110,29 @@ ePD(1, :) = [];
 aPDoff(24, :) = [];
 aPDoff_updrs(24, :) = [];
 
+% Concatenate data into a single variable
 tdat = [HC; RBD; MSAC; ePD; aPDoff; aPDon];
 
-% Get subset of gait parameter data
-gdat = tdat(:, 5:end);
+% Partial gait parameter is acquired by omitting cv parameters:
+% step length (cv), step time (cv), step width (cv), turning time (cv), turning step length (cv),
+% turning step time (cv), turning step width (cv), turning step number (cv)
+gdat_p = tdat(:, 5:end);
+gdat_p(:, [2, 4, 6, 12, 14, 16, 18, 20]) = [];
+
+% Remove data with NaN element
+nanIdx = any(isnan(gdat_p), 2);
+tdat(nanIdx, :) = [];
+gdat_p(nanIdx, :) = [];
 
 %% Normalize data by HC group
 % Get HC group's mean and standard deviation
-mHC = mean(gdat(tdat(:, 1) == 0, :));
-sHC = std(gdat(tdat(:, 1) == 0, :));
+mHC = mean(gdat_p(tdat(:, 1) == 0, :));
+sHC = std(gdat_p(tdat(:, 1) == 0, :));
 
 % Normalize data by HC group data
-ngdat = zeros(size(gdat));
-for idx = 1:size(gdat, 2)
-    ngdat(:, idx) = (gdat(:, idx) - mHC(:, idx))/sHC(:, idx);
+ngdat_p = zeros(size(gdat_p));
+for idx = 1:size(gdat_p, 2)
+    ngdat_p(:, idx) = (gdat_p(:, idx) - mHC(:, idx))/sHC(:, idx);
 end
-
-% Partial gait parameter is acquired by omitting cv parameters
-% step length (cv), step time (cv), step width (cv)
-% turning time (cv), turning step length (cv)
-% turning step time (cv), turning step width (cv)
-% turning step number (cv)
-ngdat_p = ngdat;
-ngdat_p(:, [2, 4, 6, 12, 14, 16, 18, 20]) = [];
 
 end
