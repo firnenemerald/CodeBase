@@ -26,7 +26,7 @@
 % aPDon_tdat = ?? medication on advanced PD patients' (age + sex + height) + gait parameters + UPDRS scores
 
 % Each tdat data is sorted by age
-% Sex 1 = Female, 2 = Male
+% Sex 1 = Male, 2 = Female
 
 % Walking variables (10)
 % 1 - step length (mean)
@@ -58,42 +58,43 @@
 % 23 - anterior flexion angle
 % 24 - dropped head angle
 
-function [tdat, ngdat_p, RBD_updrs, ePD_updrs, aPDoff_updrs, aPDon_updrs] = GetGaitParameters()
+function [tdat, ngdat_p, aPD_ledd, aPDon_nanIdx] = GetGaitParameters()
 
 %% Import raw data (.xlsx from gait extractor)
 % Import HC_tdat
 HC_data = readtable('data\HC_tdat.xlsx', 'VariableNamingRule', 'preserve');
 HC_numeric = HC_data{:, vartype('numeric')};
-HC_tdat = HC_numeric(:,2:28);
+HC_tdat = HC_numeric(:,2:31);
 
 % Import RBD_tdat
 RBD_data = readtable('data\RBD_tdat.xlsx', 'VariableNamingRule', 'preserve');
 RBD_numeric = RBD_data{:, vartype('numeric')};
-RBD_tdat = RBD_numeric(:, 2:28);
-RBD_updrs = RBD_numeric(:, 29:31);
+RBD_tdat = RBD_numeric(:, 2:31);
 
 % Import MSAC_tdat
 MSAC_data = readtable('data\MSAC_tdat.xlsx', 'VariableNamingRule', 'preserve');
 MSAC_numeric = MSAC_data{:, vartype('numeric')};
-MSAC_tdat = MSAC_numeric(:,2:28);
+MSAC_tdat = MSAC_numeric(:,2:31);
+
+MSAC_total_data = readtable('data\MSAC_tdat_41.xlsx', 'VariableNamingRule', 'preserve');
+MSAC_total_numeric = MSAC_total_data{:, vartype('numeric')};
+MSAC_total_tdat = MSAC_total_numeric(:, 2:31);
 
 % Import ePD_tdat
 ePD_data = readtable('data\ePD_tdat.xlsx', 'VariableNamingRule', 'preserve');
 ePD_numeric = ePD_data{:, vartype('numeric')};
-ePD_tdat = ePD_numeric(:,2:28);
-ePD_updrs = ePD_numeric(:, 29:31);
+ePD_tdat = ePD_numeric(:,2:31);
 
 % Import aPDoff_tdat
 aPDoff_data = readtable('data\aPDoff_tdat.xlsx', 'VariableNamingRule', 'preserve');
 aPDoff_numeric = aPDoff_data{:, vartype('numeric')};
-aPDoff_tdat = aPDoff_numeric(:, 2:28);
-aPDoff_updrs = aPDoff_numeric(:, 29:31);
+aPDoff_tdat = aPDoff_numeric(:, 2:31);
+aPD_ledd = aPDoff_numeric(:, 33);
 
 % Import aPDon_tdat
 aPDon_data = readtable('data\aPDon_tdat.xlsx', 'VariableNamingRule', 'preserve');
 aPDon_numeric = aPDon_data{:, vartype('numeric')};
-aPDon_tdat = aPDon_numeric(:,2:28);
-aPDon_updrs = aPDon_numeric(:, 29:31);
+aPDon_tdat = aPDon_numeric(:, 2:31);
 
 % Structure data
 HC = [0*ones(size(HC_tdat, 1), 1), HC_tdat];
@@ -102,34 +103,37 @@ MSAC = [2*ones(size(MSAC_tdat, 1), 1), MSAC_tdat];
 ePD = [3*ones(size(ePD_tdat, 1), 1), ePD_tdat];
 aPDoff = [4*ones(size(aPDoff_tdat, 1), 1), aPDoff_tdat];
 aPDon = [5*ones(size(aPDon_tdat, 1), 1), aPDon_tdat];
+MSAC_t = [6*ones(size(MSAC_total_tdat, 1), 1), MSAC_total_tdat];
 
 % Remove outliers
-RBD(30, :) = [];
-RBD_updrs(30, :) = [];
-ePD(1, :) = [];
-aPDoff(24, :) = [];
-aPDoff_updrs(24, :) = [];
+% RBD(30, :) = [];
+% RBD_updrs(30, :) = [];
+% ePD([7, 24, 30, 35], :) = [];
+% ePD_updrs([7, 24, 30, 35], :) = [];
+% aPDoff(24, :) = [];
+% aPDoff_updrs(24, :) = [];
 
 % Concatenate data into a single variable
-tdat = [HC; RBD; MSAC; ePD; aPDoff; aPDon];
+tdat = [HC; RBD; MSAC; ePD; aPDoff; aPDon; MSAC_t];
 
 % Partial gait parameter is acquired by omitting cv parameters:
 % step length (cv), step time (cv), step width (cv), turning time (cv), turning step length (cv),
 % turning step time (cv), turning step width (cv), turning step number (cv)
-gdat_p = tdat(:, 5:end);
+gdat = tdat(:, 5:28);
+gdat_p = gdat;
 gdat_p(:, [2, 4, 6, 12, 14, 16, 18, 20]) = [];
 
-% Remove data with NaN element
+% Remove data with an NaN element
 nanIdx = any(isnan(gdat_p), 2);
 tdat(nanIdx, :) = [];
 gdat_p(nanIdx, :) = [];
 
+aPDon_nanIdx = any(isnan(aPDon), 2);
+aPD_ledd(aPDon_nanIdx, :) = [];
+
 %% Normalize data by HC group
-% Get HC group's mean and standard deviation
 mHC = mean(gdat_p(tdat(:, 1) == 0, :));
 sHC = std(gdat_p(tdat(:, 1) == 0, :));
-
-% Normalize data by HC group data
 ngdat_p = zeros(size(gdat_p));
 for idx = 1:size(gdat_p, 2)
     ngdat_p(:, idx) = (gdat_p(:, idx) - mHC(:, idx))/sHC(:, idx);

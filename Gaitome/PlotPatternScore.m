@@ -56,7 +56,7 @@ group_aPDoff = cell(sum(aPDoff_idx), 1);
 group_aPDoff(:, 1) = cellstr('aPDoff');
 group_aPDon = cell(sum(aPDon_idx), 1);
 group_aPDon(:, 1) = cellstr('aPDon');
-group = [group_HC; group_RBD; group_ePD; group_aPDoff; group_aPDon];
+group = [group_HC; group_RBD; group_ePD; group_aPDoff];
 
 % Calculate mean and standard error values
 mean_HC = mean(score_HC);
@@ -73,7 +73,7 @@ mean_aPDon = mean(score_aPDon);
 se_aPDon = std(score_aPDon)/sqrt(length(score_aPDon));
 
 %% Statistical analysis (ANOVA post-hoc Tukey)
-score = [score_HC; score_RBD; score_ePD; score_aPDoff; score_aPDon];
+score = [score_HC; score_RBD; score_ePD; score_aPDoff];
 [p, table, stats] = anova1(score, group, 'on');
 headingObj = findall(0,'Type','uicontrol','Tag','Heading');
 headingObj(1).String = [expTitle, 'ANOVA table'];
@@ -87,9 +87,9 @@ tbl.("Group B") = gnames(tbl.("Group B"))
 figure;
 hold on
 
-bar_groups = {'HC', 'RBD', 'ePD', 'aPDoff', 'aPDon'};
-bar_means = [mean_HC, mean_RBD, mean_ePD, mean_aPDoff, mean_aPDon];
-bar_ses = [se_HC, se_RBD, se_ePD, se_aPDoff, se_aPDon];
+bar_groups = {'HC', 'RBD', 'ePD', 'aPDoff'};
+bar_means = [mean_HC, mean_RBD, mean_ePD, mean_aPDoff];
+bar_ses = [se_HC, se_RBD, se_ePD, se_aPDoff];
 
 % Plot bar
 barX = categorical(bar_groups);
@@ -104,12 +104,13 @@ scatter(ones(size(score_HC)) * find(barX == 'HC'), score_HC, 15, 'o', 'MarkerEdg
 scatter(ones(size(score_RBD)) * find(barX == 'RBD'), score_RBD, 15, 'o', 'MarkerEdgeColor', 'red', 'jitter', 'on', 'jitterAmount', 0.15);
 scatter(ones(size(score_ePD)) * find(barX == 'ePD'), score_ePD, 15, 'o', 'MarkerEdgeColor', 'red', 'jitter', 'on', 'jitterAmount', 0.15);
 scatter(ones(size(score_aPDoff)) * find(barX == 'aPDoff'), score_aPDoff, 15, 'o', 'MarkerEdgeColor', 'red', 'jitter', 'on', 'jitterAmount', 0.15);
-scatter(ones(size(score_aPDon)) * find(barX == 'aPDon'), score_aPDon, 15, 'o', 'MarkerEdgeColor', 'red', 'jitter', 'on', 'jitterAmount', 0.15);
+% scatter(ones(size(score_aPDon)) * find(barX == 'aPDon'), score_aPDon, 15, 'o', 'MarkerEdgeColor', 'red', 'jitter', 'on', 'jitterAmount', 0.15);
 
 % Title and axis labels
 title(expTitle);
 xlabel('Groups')
 ylabel('Gait pattern score')
+ylim([-20, 40]);
 
 grid on
 hold off

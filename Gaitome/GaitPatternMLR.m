@@ -25,6 +25,7 @@ MSAC_idx = tdat(:, 1) == 2;
 ePD_idx = tdat(:, 1) == 3;
 aPDoff_idx = tdat(:, 1) == 4;
 aPDon_idx = tdat(:, 1) == 5;
+MSAC_t_idx = tdat(:, 1) == 6;
 
 % Get age, sex, height data from tdat
 HC_age = tdat(HC_idx, 2);
@@ -45,6 +46,9 @@ aPDoff_height = tdat(aPDoff_idx, 4);
 aPDon_age = tdat(aPDon_idx, 2);
 aPDon_sex = tdat(aPDon_idx, 3);
 aPDon_height = tdat(aPDon_idx, 4);
+MSAC_t_age = tdat(MSAC_t_idx, 2);
+MSAC_t_sex = tdat(MSAC_t_idx, 3);
+MSAC_t_height = tdat(MSAC_t_idx, 4);
 
 % Get normalized gait data for each group
 HC_ngdat = ngdat(HC_idx, :);
@@ -53,6 +57,7 @@ MSAC_ngdat = ngdat(MSAC_idx, :);
 ePD_ngdat = ngdat(ePD_idx, :);
 aPDoff_ngdat = ngdat(aPDoff_idx, :);
 aPDon_ngdat = ngdat(aPDon_idx, :);
+MSAC_t_ngdat = ngdat(MSAC_t_idx, :);
 
 % Linear regression for HC group
 coefficients = cell(size(ngdat, 2), 1);
@@ -70,8 +75,9 @@ MSAC_cngdat = SubgroupRegression(MSAC_ngdat, coefficients, MSAC_age, MSAC_height
 ePD_cngdat = SubgroupRegression(ePD_ngdat, coefficients, ePD_age, ePD_height);
 aPDoff_cngdat = SubgroupRegression(aPDoff_ngdat, coefficients, aPDoff_age, aPDoff_height);
 aPDon_cngdat = SubgroupRegression(aPDon_ngdat, coefficients, aPDon_age, aPDon_height);
+MSAC_t_cngdat = SubgroupRegression(MSAC_t_ngdat, coefficients, MSAC_t_age, MSAC_t_height);
 
-cngdat = [HC_cngdat; RBD_cngdat; MSAC_cngdat; ePD_cngdat; aPDoff_cngdat; aPDon_cngdat];
+cngdat = [HC_cngdat; RBD_cngdat; MSAC_cngdat; ePD_cngdat; aPDoff_cngdat; aPDon_cngdat; MSAC_t_cngdat];
 
 end
 

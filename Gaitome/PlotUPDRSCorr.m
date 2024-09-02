@@ -16,20 +16,32 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [] = PlotUPDRSCorr(updrs, score)
+function [] = PlotUPDRSCorr(updrs, score, scoreGroup, groupName, updrsName)
+
+patternName = Num2Group(scoreGroup(2));
+updrsPart = "UPDRS part 1";
+switch updrsName
+    case "u1"
+        updrsPart = "UPDRS part 1";
+    case "u2"
+        updrsPart = "UPDRS part 2";
+    case "u3"
+        updrsPart = "UPDRS part 3";
+    case "ut"
+        updrsPart = "UPDRS total";
+end
 
 figure
 hold on
 scatter(updrs, score, 20, 'filled', 'MarkerFaceColor', 'b');
 
 grid on
-title('RBD')
-subtitle('UPDRS part 3 score vs Gait pattern score');
-xlabel('UPDRS part 3 score');
-ylabel('Gait pattern score');
-updrs_unique = unique(updrs);
-xticks(updrs_unique);
-xticklabels(string(updrs_unique));
+title(groupName)
+xlabel(strcat(updrsPart, '{ }', 'score'));
+ylabel(strcat(patternName, '{ }', 'gait pattern score'));
+% updrs_unique = unique(updrs);
+% xticks(updrs_unique);
+% xticklabels(string(updrs_unique));
 
 [r, p] = corr(updrs, score);
 linearfit = polyfit(updrs, score, 1);

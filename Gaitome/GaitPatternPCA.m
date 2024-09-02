@@ -16,7 +16,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [PCA_eigen, e, GIS_Yz] = GaitPatternPCA(tdat, cngdat, groups)
+function [PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, groups)
 
 groupX = groups(1);
 groupY = groups(2);

@@ -1,7 +1,7 @@
 %% GaitPatternScoring.m (ver 1.0.240820)
 % Gait pattern scoring with gait parameters
 
-% Copyright (C) 2024 Jung Hwan Shin, Pil-ung Lee, Chanhee Jeong
+% Copyright (C) 2024 Chanhee Jeong
 
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
