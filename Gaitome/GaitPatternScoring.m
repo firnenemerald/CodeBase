@@ -20,7 +20,7 @@ clear
 close all
 
 % Import gait parameters
-[tdat, ngdat_p, aPD_ledd, aPDon_nanIdx] = GetGaitParameters();
+[tdat, ngdat_p, aPD_ledd, aPDon_nanIdx, ePD_citpet] = GetGaitParameters();
 
 % Get each group's indices
 HC_idx = tdat(:, 1) == 0;
@@ -62,20 +62,20 @@ cngdat_MSAC_t = cngdat(MSAC_t_idx, :);
 
 %============================%
 % Select groups for analysis %
-scoreGroup = [0, 2];         %
+scoreGroup = [0, 4];         %
 %============================%
 
 % PCA and scoring of gait pattern
 [PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, scoreGroup);
 
 % Calculate each group's gait pattern score
-% score_HC = cngdat_HC * GIS_Yz;
-% score_RBD = cngdat_RBD * GIS_Yz;
-% score_MSAC = cngdat_MSAC * GIS_Yz;
-% score_ePD = cngdat_ePD * GIS_Yz;
-% score_aPDoff = cngdat_aPDoff * GIS_Yz;
-% score_aPDon = cngdat_aPDon * GIS_Yz;
-% score_MSAC_t = cngdat_MSAC_t * GIS_Yz;
+score_HC = cngdat_HC * GIS_Yz;
+score_RBD = cngdat_RBD * GIS_Yz;
+score_MSAC = cngdat_MSAC * GIS_Yz;
+score_ePD = cngdat_ePD * GIS_Yz;
+score_aPDoff = cngdat_aPDoff * GIS_Yz;
+score_aPDon = cngdat_aPDon * GIS_Yz;
+score_MSAC_t = cngdat_MSAC_t * GIS_Yz;
 
 % Plot score vs covar graph (before and after regression)
 % PlotParameterRegression(tdat, ngdat_p, cngdat, GIS_Yz, 'height');
@@ -104,3 +104,5 @@ scoreGroup = [0, 2];         %
 % aPDon_concat(excIdx, :) = [];
 
 % PlotOnOffBar(aPDoff_concat, aPDon_concat, aPD_ledd, 'u1');
+
+PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'ALL', 'b');
