@@ -58,7 +58,7 @@
 % 23 - anterior flexion angle
 % 24 - dropped head angle
 
-function [tdat, ngdat_p, aPD_ledd, aPDon_nanIdx, ePD_citpet] = GetGaitParameters()
+function [tdat, ngdat_p, aPD_ledd, aPDon_nanIdx] = GetGaitParameters()
 
 %% Import raw data (.xlsx from gait extractor)
 % Import HC_tdat
@@ -84,7 +84,7 @@ MSAC_total_tdat = MSAC_total_numeric(:, 2:31);
 ePD_data = readtable('data\ePD_tdat.xlsx', 'VariableNamingRule', 'preserve');
 ePD_numeric = ePD_data{:, vartype('numeric')};
 ePD_tdat = ePD_numeric(:,2:31);
-ePD_citpet = ePD_numeric(:, 75:143);
+%ePD_citpet = ePD_numeric(:, 75:143);
 
 % Import aPDoff_tdat
 aPDoff_data = readtable('data\aPDoff_tdat.xlsx', 'VariableNamingRule', 'preserve');

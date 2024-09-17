@@ -20,7 +20,7 @@ clear
 close all
 
 % Import gait parameters
-[tdat, ngdat_p, aPD_ledd, aPDon_nanIdx, ePD_citpet] = GetGaitParameters();
+[tdat, ngdat_p, aPD_ledd, aPDon_nanIdx] = GetGaitParameters();
 
 % Get each group's indices
 HC_idx = tdat(:, 1) == 0;
@@ -87,10 +87,10 @@ score_MSAC_t = cngdat_MSAC_t * GIS_Yz;
 % PlotPatternScore(tdat, cngdat, GIS_Yz, scoreGroup);
 
 % Plot and correlate score vs updrs
-% PlotUPDRSCorr(aPDoff_u1, score_aPDoff, scoreGroup, "aPDoff", "u1");
-% PlotUPDRSCorr(aPDoff_u2, score_aPDoff, scoreGroup, "aPDoff", "u2");
-% PlotUPDRSCorr(aPDoff_u3, score_aPDoff, scoreGroup, "aPDoff", "u3");
-% PlotUPDRSCorr(aPDoff_ut, score_aPDoff, scoreGroup, "aPDoff", "ut");
+PlotUPDRSCorr(aPDoff_u1, score_aPDoff, scoreGroup, "aPD", "u1");
+PlotUPDRSCorr(aPDoff_u2, score_aPDoff, scoreGroup, "aPD", "u2");
+PlotUPDRSCorr(aPDoff_u3, score_aPDoff, scoreGroup, "aPD", "u3");
+PlotUPDRSCorr(aPDoff_ut, score_aPDoff, scoreGroup, "aPD", "ut");
 
 % PlotCustomBar(HC_age, MSAC_age);
 
@@ -105,4 +105,4 @@ score_MSAC_t = cngdat_MSAC_t * GIS_Yz;
 
 % PlotOnOffBar(aPDoff_concat, aPDon_concat, aPD_ledd, 'u1');
 
-PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'ALL', 'b');
+% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'ALL', 'b');

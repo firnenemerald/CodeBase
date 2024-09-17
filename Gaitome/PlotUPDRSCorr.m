@@ -34,6 +34,7 @@ end
 figure
 hold on
 scatter(updrs, score, 20, 'filled', 'MarkerFaceColor', 'b');
+text(updrs + 0.2, score + 0.2, cellstr(num2str([1:length(score)]')), 'FontSize', 7);
 
 grid on
 title(groupName)

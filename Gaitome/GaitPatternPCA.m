@@ -91,11 +91,11 @@ lscore = mdl.Fitted.Probability;
 e = mdl.Coefficients.Estimate(2:end);
 AIC = mdl.ModelCriterion.AICc;
 
-%% Plot AUC curve
-%plot(X, Y);
-%title(expTitle, "Interpreter", "none");
-%aucText = sprintf('%s\nAUC = %.2f', expTitle, AUC);
-%text(0.5, 0.5, aucText, 'FontSize', 16, 'HorizontalAlignment', 'center');
+% Plot AUC curve
+plot(X, Y);
+title(expTitle, "Interpreter", "none");
+aucText = sprintf('%s\nAUC = %.2f', expTitle, AUC);
+text(0.5, 0.5, aucText, 'FontSize', 16, 'HorizontalAlignment', 'center');
 
 num_e = length(e);
 
