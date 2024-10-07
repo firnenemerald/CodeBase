@@ -16,7 +16,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, groups)
+function [PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, groups, saveDir, saveFlag)
 
 groupX = groups(1);
 groupY = groups(2);
@@ -91,11 +91,18 @@ lscore = mdl.Fitted.Probability;
 e = mdl.Coefficients.Estimate(2:end);
 AIC = mdl.ModelCriterion.AICc;
 
-% Plot AUC curve
-plot(X, Y);
-title(expTitle, "Interpreter", "none");
-aucText = sprintf('%s\nAUC = %.2f', expTitle, AUC);
-text(0.5, 0.5, aucText, 'FontSize', 16, 'HorizontalAlignment', 'center');
+% Plot and save ROC curve to file if saveFlag is true
+if saveFlag == true
+    figROC = figure;
+    plot(X, Y);
+    title(expTitle, "Interpreter", "none");
+    aucText = sprintf('%s\nAUC = %.2f', expTitle, AUC);
+    text(0.5, 0.5, aucText, 'FontSize', 16, 'HorizontalAlignment', 'center');
+    pbaspect([1, 1, 1]);
+    
+    saveas(figROC, strcat(saveDir, Y_name, '_PCArocurve'), 'svg');
+    saveas(figROC, strcat(saveDir, Y_name, '_PCArocurve'), 'png');
+end
 
 num_e = length(e);
 

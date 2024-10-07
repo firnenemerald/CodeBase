@@ -1,4 +1,4 @@
-%% PlotCITPETCorr.m (ver 1.0.240903)
+%% PlotCITPETCorr.m (ver 1.1.240923)
 % CITPET correlation with gait pattern score
 
 % Copyright (C) 2024 Chanhee Jeong
@@ -19,7 +19,6 @@
 function [] = PlotCITPETCorr(score, ePD_citpet, scoreGroup, roiName, latName)
 
 ePD_nanIdx = any(isnan(ePD_citpet), 2);
-% ePD_nanIdx([7, 18, 24, 35]) = 1;
 score(ePD_nanIdx, :) = [];
 ePD_citpet(ePD_nanIdx, :) = [];
 
@@ -67,8 +66,8 @@ scatter(citData, score, 20, 'filled', 'MarkerFaceColor', 'b');
 
 grid on
 title('(ePD) CIT PET roi value vs gait score');
-xlabel(strcat('roi = ', '{ }', roiName, '{ }', '(', latName, ')'));
-ylabel(strcat(patternName, '{ }', 'gait pattern score'));
+xlabel(strcat('roi = ', {' '}, roiName, {' '}, '(', latName, ')'), "Interpreter", "none");
+ylabel(strcat(patternName, {' '}, 'gait pattern score'), "Interpreter", "none");
 
 [r, p] = corr(citData, score);
 linearfit = polyfit(citData, score, 1);
@@ -111,7 +110,7 @@ signTrue2 = signTrue(:, 20:38);
 signTrue3 = signTrue(:, 39:57);
 signTrue4 = signTrue(:, 58:69);
 
-figure
+figCIT = figure("WindowState", "maximized");
 hold on
 myCmap = [1, 1, 1; linspace(1, 1, 255)', linspace(1, 0, 255)', linspace(1, 0, 255)'];
 

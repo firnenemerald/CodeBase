@@ -1,5 +1,5 @@
-%% GaitPatternScoring.m (ver 1.0.240820)
-% Gait pattern scoring with gait parameters
+%% describedata.m (ver 1.1.240923)
+% Basic descriptive statistics for 1-d data
 
 % Copyright (C) 2024 Chanhee Jeong
 
@@ -16,24 +16,21 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [groupName] = Num2Group(number)
+function [desc] = describedata(arr, flag)
+    N = length(arr);
+    Avg = mean(arr);
+    Std = std(arr);
+    Min = min(arr);
+    Med = median(arr);
+    Max = max(arr);
+    basicstats = table(N, Avg, Std, Min, Med, Max);
 
-groupName = "";
-switch number
-    case 1
-        groupName = "HC";
-    case 2
-        groupName = "RBD";
-    case 3
-        groupName = "ePD";
-    case 4
-        groupName = "aPDoff";
-    case 5
-        groupName = "aPDon";
-    case 6
-        groupName = "MSAC";
-    case 7
-        groupName = "MSAC";
-end
-
+    switch flag
+        case 'table'
+            desc = basicstats;
+        case 'avg'
+            desc = string(Avg) + " ± " + string(Std) + " [" + string(Min) + ", " + string(Max) + "]";
+        case 'sex'
+            desc = string(sum(arr==1)) + "/" + string(sum(arr==2));
+    end
 end

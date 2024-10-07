@@ -1,5 +1,5 @@
-%% GaitPatternScoring.m (ver 1.0.240820)
-% Gait pattern scoring with gait parameters
+%% PlotPCACovar.m (ver 1.0.240923)
+% Plot SSM-PCA covariate matrix in a heatmap fashion
 
 % Copyright (C) 2024 Chanhee Jeong
 
@@ -16,24 +16,23 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [groupName] = Num2Group(number)
+function [] = PlotPCAProcess(C, explained, scoreGroup, saveDir)
 
-groupName = "";
-switch number
-    case 1
-        groupName = "HC";
-    case 2
-        groupName = "RBD";
-    case 3
-        groupName = "ePD";
-    case 4
-        groupName = "aPDoff";
-    case 5
-        groupName = "aPDon";
-    case 6
-        groupName = "MSAC";
-    case 7
-        groupName = "MSAC";
-end
+gName = Num2Group(scoreGroup(2));
+
+pcac = figure;
+imagesc(C);
+clim([-10, 15]);
+colormap(redblue);
+colorbar
+saveas(pcac, strcat(saveDir, gName, '_PCAcovmat'), 'svg');
+saveas(pcac, strcat(saveDir, gName, '_PCAcovmat'), 'png');
+
+pcae = figure;
+bar(explained);
+xlim([0, 20]);
+yline(5);
+saveas(pcae, strcat(saveDir, gName, '_PCAexplained'), 'svg');
+saveas(pcae, strcat(saveDir, gName, '_PCAexplained'), 'png');
 
 end

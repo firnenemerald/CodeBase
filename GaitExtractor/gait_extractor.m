@@ -18,7 +18,7 @@ tdatat = [];
 tdatap = [];
 tlist = {};
 
-for session = 3:length(list)
+for session = [3, 15, 19, 26, 32]%:length(list)
     cd([char(sessionFolder), '/', list(session).name])
     xtempFile = FindFiles('*.xlsx','CheckSubdirs',1);
     if length(xtempFile)>5 %xlsx파일의 개수가 6개 이상부터

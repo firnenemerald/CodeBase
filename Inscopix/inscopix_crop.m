@@ -1,6 +1,5 @@
 baseDir = 'C:\\Users\\chanh\\Downloads\\Inscopix_crop';
 expName = 'ChAT_853-1';
-
 expDir = strcat(baseDir, '\\', expName);
 
 % Check if it is already cropped

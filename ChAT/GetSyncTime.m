@@ -1,5 +1,5 @@
-%% GaitPatternScoring.m (ver 1.0.240820)
-% Gait pattern scoring with gait parameters
+%% GetSyncTime.m (ver 1.0.240923)
+% Helper function to get experiment session's synctime
 
 % Copyright (C) 2024 Chanhee Jeong
 
@@ -16,24 +16,22 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [groupName] = Num2Group(number)
+function syncTime = GetSyncTime(gpioArray, pulseIndex)
+    arguments
+        gpioArray (:, 2) double
+        pulseIndex = 1
+    end
 
-groupName = "";
-switch number
-    case 1
-        groupName = "HC";
-    case 2
-        groupName = "RBD";
-    case 3
-        groupName = "ePD";
-    case 4
-        groupName = "aPDoff";
-    case 5
-        groupName = "aPDon";
-    case 6
-        groupName = "MSAC";
-    case 7
-        groupName = "MSAC";
-end
+    gpioTime = gpioArray(:, 1);
+    gpioSignal = gpioArray(:, 2);
+    gpioMax = max(gpioSignal);
+
+    pulseNum = length(find(diff(gpioSignal) > 0.5 * gpioMax));
+    if pulseIndex > pulseNum
+        ME = MException('MATLAB:outofbounds', 'pulseIndex %d is larger than total pulse number %d', pulseIndex, pulseNum);
+        throw(ME)
+    end
+
+    syncTime = gpioTime(pulseNum(pulseIndex));
 
 end

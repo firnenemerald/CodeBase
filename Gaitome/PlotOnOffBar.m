@@ -16,7 +16,12 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [] = PlotOnOffBar(aPDoff_concat, aPDon_concat, aPD_ledd, updrsName)
+function [] = PlotOnOffBar(aPDoff_concat, aPDon_concat, aPD_ledd, updrsName, saveDir)
+
+% Eliminate last patient data
+aPDoff_concat = aPDoff_concat(1:end-1, :);
+aPDon_concat = aPDon_concat(1:end-1, :);
+aPD_ledd = aPD_ledd(1:end-1, :);
 
 updrsPart = "UPDRS part 1";
 aPDoff_con = aPDoff_concat(:, [1, 2]);
@@ -66,8 +71,9 @@ xlabel('Gait score');
 ylabel('Probability');
 legend({'OFF medication', 'ON medication'});
 
-grid on
 hold off
+saveas(fig1, strcat(saveDir, 'OnOffGaitCohen'), 'svg');
+saveas(fig1, strcat(saveDir, 'OnOffGaitCohen'), 'png');
 
 fig2 = figure;
 hold on
@@ -87,8 +93,9 @@ xlabel(strcat(updrsPart, {' '}, 'score'));
 ylabel('Probability');
 legend({'OFF medication', 'ON medication'});
 
-grid on
 hold off
+saveas(fig2, strcat(saveDir, 'OnOffUPDRSCohen'), 'svg');
+saveas(fig2, strcat(saveDir, 'OnOffUPDRSCohen'), 'png');
 
 fig3 = figure;
 hold on
@@ -104,11 +111,12 @@ barX = reordercats(barX, bar_groups);
 bh = bar(barX, bar_means, 'EdgeColor', 'black', 'FaceAlpha', 0.5);
 errorbar(barX, bar_means, bar_ses, 'LineStyle', 'none', 'LineWidth', 2, 'Color', 'black');
 
-scatter(ones(size(scores(:, 1))) * find(barX == 'Medication OFF'), scores(:, 1), 15, 'o', 'MarkerEdgeColor', 'blue');
-scatter(ones(size(scores(:, 2))) * find(barX == 'Medication ON'), scores(:, 2), 15, 'o', 'MarkerEdgeColor', 'red');
+scatter(ones(size(scores(:, 1))) * find(barX == 'Medication OFF'), scores(:, 1), 20, 'o', 'filled', 'MarkerFaceColor', 'blue', 'MarkerEdgeColor', 'white');
+scatter(ones(size(scores(:, 2))) * find(barX == 'Medication ON'), scores(:, 2), 20, 'o', 'filled', 'MarkerFaceColor', 'red', 'MarkerEdgeColor', 'white');
 
 for idx = 1:length(scores(:, 1))
     plot([1, 2], [scores(idx, 1), scores(idx, 2)], 'k-', 'LineWidth', 1);
+    %text(2, updrss(idx, 2), int2str(idx));
 end
 
 bh.FaceColor = 'flat';
@@ -121,6 +129,9 @@ xlabel('Groups');
 ylabel('Gait score');
 
 hold off
+
+saveas(fig3, strcat(saveDir, 'OnOffGaitDiff'), 'svg');
+saveas(fig3, strcat(saveDir, 'OnOffGaitDiff'), 'png');
 
 fig4 = figure;
 hold on
@@ -136,8 +147,8 @@ barX = reordercats(barX, bar_groups);
 bh = bar(barX, bar_means, 'EdgeColor', 'black', 'FaceAlpha', 0.5);
 errorbar(barX, bar_means, bar_ses, 'LineStyle', 'none', 'LineWidth', 2, 'Color', 'black');
 
-scatter(ones(size(updrss(:, 1))) * find(barX == 'Medication OFF'), updrss(:, 1), 15, 'o', 'MarkerEdgeColor', 'blue');
-scatter(ones(size(updrss(:, 2))) * find(barX == 'Medication ON'), updrss(:, 2), 15, 'o', 'MarkerEdgeColor', 'red');
+scatter(ones(size(updrss(:, 1))) * find(barX == 'Medication OFF'), updrss(:, 1), 20, 'o', 'filled', 'MarkerFaceColor', 'blue', 'MarkerEdgeColor', 'white');
+scatter(ones(size(updrss(:, 2))) * find(barX == 'Medication ON'), updrss(:, 2), 20, 'o', 'filled', 'MarkerFaceColor', 'red', 'MarkerEdgeColor', 'white');
 
 for idx = 1:length(updrss(:, 1))
     plot([1, 2], [updrss(idx, 1), updrss(idx, 2)], 'k-', 'LineWidth', 1);
@@ -154,21 +165,26 @@ ylabel(strcat(updrsPart, {' '}, 'score'));
 
 hold off
 
+saveas(fig4, strcat(saveDir, 'OnOffUPDRSDiff'), 'svg');
+saveas(fig4, strcat(saveDir, 'OnOffUPDRSDiff'), 'png');
+
 diff_score = aPDoff_con(:, 1) - aPDon_con(:, 1);
 diff_updrs = aPDoff_con(:, 2) - aPDon_con(:, 2);
 
-%% LEDD vs Gait score
+%% LEDD vs Gait score correlation
 fig5 = figure;
 hold on;
 
-scatter(aPD_ledd, diff_score, 20, 'filled', 'MarkerFaceColor', 'b');
+pointEdgeColor = [1, 1, 1];
+pointFaceColor = [0.3, 0.3, 0.3];
+scatter(aPD_ledd, diff_score, 20, 'o', 'filled', 'MarkerEdgeColor', pointEdgeColor, 'MarkerFaceColor', pointFaceColor);
 
 % Linear regression line
 [r, p] = corr(aPD_ledd, diff_score);
 linearfit = polyfit(aPD_ledd, diff_score, 1);
 xfit = linspace(min(aPD_ledd), max(aPD_ledd), 100);
 yfit = polyval(linearfit, xfit);
-plot(xfit, yfit, '-b', 'LineWidth', 2);
+plot(xfit, yfit, '-r', 'LineWidth', 1.5);
 xlimit = xlim; ylimit = ylim;
 text(xlimit(2), ylimit(2), sprintf('R = %.2f, p = %.5f', r, p), 'HorizontalAlignment', 'right');
 
@@ -179,18 +195,18 @@ ylabel('Gait score difference');
 
 hold off
 
-%% LEDD vs Gait score
+%% LEDD vs UPDRS score correlation
 fig6 = figure;
 hold on;
 
-scatter(aPD_ledd, diff_updrs, 20, 'filled', 'MarkerFaceColor', 'b');
+scatter(aPD_ledd, diff_updrs, 20, 'o', 'filled', 'MarkerEdgeColor', pointEdgeColor, 'MarkerFaceColor', pointFaceColor);
 
 % Linear regression line
 [r, p] = corr(aPD_ledd, diff_updrs);
 linearfit = polyfit(aPD_ledd, diff_updrs, 1);
 xfit = linspace(min(aPD_ledd), max(aPD_ledd), 100);
 yfit = polyval(linearfit, xfit);
-plot(xfit, yfit, '-b', 'LineWidth', 2);
+plot(xfit, yfit, '-r', 'LineWidth', 1.5);
 xlimit = xlim; ylimit = ylim;
 text(xlimit(2), ylimit(2), sprintf('R = %.2f, p = %.5f', r, p), 'HorizontalAlignment', 'right');
 

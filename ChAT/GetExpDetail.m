@@ -1,5 +1,7 @@
-%% GaitPatternScoring.m (ver 1.0.240820)
-% Gait pattern scoring with gait parameters
+%% GetExpDetail.m (ver 1.0.240918)
+% Helper function to get experiment session's details
+% Input is experiment session's name
+% Output is mouse name (name) OR session timestamp (time) OR experiment type (type)
 
 % Copyright (C) 2024 Chanhee Jeong
 
@@ -16,24 +18,17 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [groupName] = Num2Group(number)
+function [result] = GetExpDetail(expName, part)
 
-groupName = "";
-switch number
-    case 1
-        groupName = "HC";
-    case 2
-        groupName = "RBD";
-    case 3
-        groupName = "ePD";
-    case 4
-        groupName = "aPDoff";
-    case 5
-        groupName = "aPDon";
-    case 6
-        groupName = "MSAC";
-    case 7
-        groupName = "MSAC";
-end
-
+expNameSplit = split(expName, '_');
+switch part
+    case 'name'
+        result = string(expNameSplit(1)) + '_' + string(expNameSplit(2));
+    case 'time'
+        result = string(expNameSplit(3));
+    case 'type'
+        result = string(expNameSplit(4));
+    otherwise
+        msg = 'second argument is limited to name, time, or type';
+        error(msg);
 end

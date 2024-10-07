@@ -1,7 +1,7 @@
-%% PlotUPDRSCorr.m (ver 1.0.240825)
+%% PlotUPDRSCorr.m (ver 1.1.240924)
 % UPDRS correlation with gait pattern score
 
-% Copyright (C) 2024 Jung Hwan Shin, Pil-ung Lee, Chanhee Jeong
+% Copyright (C) 2024 Pil-ung Lee, Chanhee Jeong, Jung Hwan Shin
 
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -16,10 +16,10 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [] = PlotUPDRSCorr(updrs, score, scoreGroup, groupName, updrsName)
+function [] = PlotUPDRSCorr(updrs, score, scoreGroup, groupName, updrsName, saveDir)
 
 patternName = Num2Group(scoreGroup(2));
-updrsPart = "UPDRS part 1";
+updrsPart = "UPDRS part 3";
 switch updrsName
     case "u1"
         updrsPart = "UPDRS part 1";
@@ -31,15 +31,25 @@ switch updrsName
         updrsPart = "UPDRS total";
 end
 
-figure
+figu = figure;
 hold on
-scatter(updrs, score, 20, 'filled', 'MarkerFaceColor', 'b');
-text(updrs + 0.2, score + 0.2, cellstr(num2str([1:length(score)]')), 'FontSize', 7);
 
-grid on
+pointEdgeColor = [1, 1, 1];
+pointFaceColor = [0.3, 0.3, 0.3];
+scatter(updrs, score, 20, 'o', 'MarkerEdgeColor', pointEdgeColor, 'MarkerFaceColor', pointFaceColor);
+% text(updrs + 0.2, score + 0.2, cellstr(num2str([1:length(score)]')), 'FontSize', 7);
+
 title(groupName)
 xlabel(strcat(updrsPart, '{ }', 'score'));
-ylabel(strcat(patternName, '{ }', 'gait pattern score'));
+ylabel(strcat(patternName, '{ }', 'gait pattern Z-score'));
+switch groupName
+    case 'aPD'
+        xlim([15, 85]);
+        ylim([2, 10]);
+    case 'ePD'
+        xlim([0, 55]);
+        ylim([0, 4.5]);
+end
 % updrs_unique = unique(updrs);
 % xticks(updrs_unique);
 % xticklabels(string(updrs_unique));
@@ -48,9 +58,12 @@ ylabel(strcat(patternName, '{ }', 'gait pattern score'));
 linearfit = polyfit(updrs, score, 1);
 xfit = linspace(min(updrs), max(updrs), 100);
 yfit = polyval(linearfit, xfit);
-plot(xfit, yfit, '-b', 'Linewidth', 2);
+plot(xfit, yfit, '-r', 'Linewidth', 1.5);
 xlimit = xlim; ylimit = ylim;
 text(xlimit(2), ylimit(2), sprintf('R = %.2f, p = %.5f', r, p), 'HorizontalAlignment', 'right');
 hold off
+
+saveas(figu, strcat(saveDir, 'G_', groupName, '_S_', patternName, '_corr'), 'svg');
+saveas(figu, strcat(saveDir, 'G_', groupName, '_S_', patternName, '_corr'), 'png');
 
 end

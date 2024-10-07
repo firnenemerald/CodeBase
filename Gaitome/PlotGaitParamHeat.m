@@ -1,5 +1,5 @@
-%% GaitPatternScoring.m (ver 1.0.240820)
-% Gait pattern scoring with gait parameters
+%% PlotGaitParamHeat.m (ver 1.0.240923)
+% Plot gait parameters in a heatmap
 
 % Copyright (C) 2024 Chanhee Jeong
 
@@ -16,24 +16,19 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [groupName] = Num2Group(number)
+function [] = PlotGaitParamHeat(cngdat_aPDoff, cngdat_HC, cngdat_ePD, saveDir)
 
-groupName = "";
-switch number
-    case 1
-        groupName = "HC";
-    case 2
-        groupName = "RBD";
-    case 3
-        groupName = "ePD";
-    case 4
-        groupName = "aPDoff";
-    case 5
-        groupName = "aPDon";
-    case 6
-        groupName = "MSAC";
-    case 7
-        groupName = "MSAC";
-end
+gph = figure;
+imagesc([cngdat_aPDoff; zeros(1, 19); cngdat_HC; zeros(1, 19); cngdat_ePD]);
+%yline(size(cngdat_aPDoff, 1)+0.5, "LineWidth", 2, "Color", [0 0 0], "Alpha", 1);
+%yline(size(cngdat_aPDoff, 1)+size(cngdat_HC, 1)+0.5, "LineWidth", 2, "Color", [0 0 0], "Alpha", 1);
+title('aPD vs HC vs ePD gait parameters')
+clim([-3, 3]);
+colormap(redblue)
+colorbar
+axis off
+
+saveas(gph, strcat(saveDir, 'GaitParamHeat'), 'svg');
+saveas(gph, strcat(saveDir, 'GaitParamHeat'), 'png');
 
 end
