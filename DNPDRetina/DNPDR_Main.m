@@ -1,4 +1,4 @@
-%% DNPDR_Main.m (ver 1.0.241012)
+%% DNPDR_Main.m (ver 1.1.241014)
 % Main script for DNPDR analysis
 
 % Copyright (C) 2024 Chanhee Jeong
@@ -24,8 +24,12 @@ clear; close all;
 % Exclude subjects with extensive missing data
 DNPDRC([1, 14], :) = [];
 
-% PID, Sex, Age, YOB, Onset_year, Dx_year, Dx_month, UPDRS_year, UPDRS_month, MMSE_year, MMSE_month, KVHQ_year, KVHQ_month, PDSS_year, PDSS_month, Hue_year, Hue_month, VOG_year, VOG_month, OCT_year, OCT_month
+% Patient info
+% PID, Sex, Age, YOB, Onset_year, Dx_year, Dx_month, UPDRS_year, UPDRS_month, MMSE_year, MMSE_month, ...
+% KVHQ_year, KVHQ_month, PDSS_year, PDSS_month, Hue_year, Hue_month, VOG_year, VOG_month, OCT_year, OCT_month
 DNPDRP_info = DNPDRP(:, [1:9, 76:77, 79:80, 101:102, 118:119, 122:123, 136:137]);
+
+% Calculate durations
 DNPDRP_duration = DNPDRP_info(:, 6) + DNPDRP_info(:, 7)/12 - DNPDRP_info(:, 5);
 DNPDRP_updrsDuration = DNPDRP_info(:, 8) + DNPDRP_info(:, 9)/12 - DNPDRP_info(:, 5);
 DNPDRP_mmseDuration = DNPDRP_info(:, 10) + DNPDRP_info(:, 11)/12 - DNPDRP_info(:, 5);
@@ -35,38 +39,62 @@ DNPDRP_hueDuration = DNPDRP_info(:, 16) + DNPDRP_info(:, 17)/12 - DNPDRP_info(:,
 DNPDRP_vogDuration = DNPDRP_info(:, 18) + DNPDRP_info(:, 19)/12 - DNPDRP_info(:, 5);
 DNPDRP_octDuration = DNPDRP_info(:, 20) + DNPDRP_info(:, 21)/12 - DNPDRP_info(:, 5);
 
+% UPDRS list and labels
 DNPDRP_updrs = DNPDRP(:, 10:75);
-DNPDRP_u1 = DNPDRP_updrs(:, 1:13); DNPDRP_u2 = DNPDRP_updrs(:, 14:26); DNPDRP_u3 = DNPDRP_updrs(:, 27:59); DNPDRP_u4 = DNPDRP_updrs(:, 60:63); DNPDRP_hy = DNPDRP_updrs(:, 64);
-DNPDR_u1_items = ["Cognitive impairment", "Hallucinations and psychosis", "Depressed mood", "Anxious mood", "Apathy", "Dopamine dysregulation", "Sleep problems", "Daytime sleepiness", "Pain and others", "Urinary problems", ...
- "Constipation", "Light headedness", "Fatigue"];
-DNPDR_u2_items = ["Speech", "Saliva drooling", "Chewing swallowing", "Eating tasks", "Dressing", "Hygiene", "Handwriting", "Doing hobbies", "Turning in bed", "Tremor", "Get out of bed", "Walking balance", "Freezing"];
-DNPDR_u3_items = ["Speech", "Facial expression", "Rigidity (Neck)", "Rigidity (RUE)", "Rigidity (LUE)", "Rigidity (RLE)", "Rigidity (LLE)", "Finger tapping (R)", "Finger tapping (L)", "Hand movements (R)", "Hand movements (L)", ...
-"Pronation/Supination (R)", "Pronation/Supination (L)", "Toe tapping (R)", "Toe tapping (L)", "Leg agility (R)", "Leg agility (L)", "Arising from chair", "Gait", "Freezing", "Postural stability", "Posture", "Bradykinesia", ...
-"Postural tremor (R)", "Postural tremor (L)", "Kinetic tremor (R)", "Kinetic tremor (L)", "Rest tremor (RUE)", "Rest tremor (LUE)", "Rest tremor (RLE)", "Rest tremor (LLE)", "Rest tremor (Jaw)", "Rest tremor constancy"];
+DNPDRP_u1 = DNPDRP_updrs(:, 1:13); DNPDRP_u2 = DNPDRP_updrs(:, 14:26); DNPDRP_u3 = DNPDRP_updrs(:, 27:59); DNPDRP_u4 = DNPDRP_updrs(:, 60:65);
+DNPDRP_hy = DNPDRP_updrs(:, 66);
+DNPDR_u1_items = ["Cognitive impairment", "Hallucinations and psychosis", "Depressed mood", "Anxious mood", "Apathy", "Dopamine dysregulation", ...
+"Sleep problems", "Daytime sleepiness", "Pain and others", "Urinary problems", "Constipation", "Light headedness", "Fatigue"];
+DNPDR_u2_items = ["Speech", "Saliva drooling", "Chewing swallowing", "Eating tasks", "Dressing", "Hygiene", "Handwriting", "Doing hobbies", ...
+"Turning in bed", "Tremor", "Get out of bed", "Walking balance", "Freezing"];
+DNPDR_u3_items = ["Speech", "Facial expression", "Rigidity (Neck)", "Rigidity (RUE)", "Rigidity (LUE)", "Rigidity (RLE)", "Rigidity (LLE)", ...
+"Finger tapping (R)", "Finger tapping (L)", "Hand movements (R)", "Hand movements (L)", "Pronation/Supination (R)", "Pronation/Supination (L)", ...
+"Toe tapping (R)", "Toe tapping (L)", "Leg agility (R)", "Leg agility (L)", "Arising from chair", "Gait", "Freezing", "Postural stability", ...
+"Posture", "Bradykinesia", "Postural tremor (R)", "Postural tremor (L)", "Kinetic tremor (R)", "Kinetic tremor (L)", "Rest tremor (RUE)", ...
+"Rest tremor (LUE)", "Rest tremor (RLE)", "Rest tremor (LLE)", "Rest tremor (Jaw)", "Rest tremor constancy"];
 DNPDR_hy_items = "H-Y score";
 
+% MMSE list and labels
 DNPDRP_mmse = DNPDRP(:, 78);
 DNPDR_mmse_items = "MMSE score";
 
+% KVHQ list and labels
 DNPDRP_kvhq = DNPDRP(:, 81:100);
 DNPDRP_kvhq1 = DNPDRP_kvhq(:, 1:10); DNPDRP_kvhq2 = DNPDRP_kvhq(:, 11:20);
-DNPDR_kvhq1_items = ["빛 번짐", "글자 안 보임", "직선이 곡선으로", "야간 시력 문제", "헤드라이트 반짝", "빠른 움직임 어려움", "깊이 인식 어려움", "채도 구분 어려움", "배경 위 글자", "조명 변화 글자"];
-DNPDR_kvhq2_items = ["없는 사람이 보임", "시야 가장자리", "무언가 지나감", "그림자 형태", "다른 것으로 착각", "실제로 없는 물체", "실제가 아닌 소리", "실제가 아닌 촉감", "실제가 아닌 냄새", "실제가 아닌 맛"];
+DNPDR_kvhq1_items = ["빛 번짐", "글자 안 보임", "직선이 곡선으로", "야간 시력 문제", "헤드라이트 반짝", "빠른 움직임 어려움", ...
+"깊이 인식 어려움", "채도 구분 어려움", "배경 위 글자", "조명 변화 글자"];
+DNPDR_kvhq2_items = ["없는 사람이 보임", "시야 가장자리", "무언가 지나감", "그림자 형태", "다른 것으로 착각", "실제로 없는 물체", ...
+"실제가 아닌 소리", "실제가 아닌 촉감", "실제가 아닌 냄새", "실제가 아닌 맛"];
 
+% PDSS list and labels
 DNPDRP_pdss = DNPDRP(:, 103:117);
-DNPDR_pdss_items = ["수면의 질", "입면 어려움", "수면 유지 어려움", "팔다리 불안", "팔다리 탈면", "이상한 꿈", "환청/환시", "야간뇨", "가위 눌림", "팔다리 통증", "팔다리 뭉침", "이상한 자세", "기상 시 떨림", "피곤함/졸림", "코골이 탈면"];
+DNPDR_pdss_items = ["수면의 질", "입면 어려움", "수면 유지 어려움", "팔다리 불안", "팔다리 탈면", "이상한 꿈", "환청/환시", "야간뇨", ...
+"가위 눌림", "팔다리 통증", "팔다리 뭉침", "이상한 자세", "기상 시 떨림", "피곤함/졸림", "코골이 탈면"];
 
 DNPDRP_hue = DNPDRP(:, 120:121);
-DNPDRP_vog = DNPDRP(:, 124:135);
-DNPDRP_oct = DNPDRP(:, 138:end);
-DNPDRP_axl_od = DNPDRP_oct(:, 1); DNPDRP_wrt_od = DNPDRP_oct(:, 3:11); DNPDRP_rnfl_od = DNPDRP_oct(:, 12:20); DNPDRP_gcl_od = DNPDRP_oct(:, 21:29); DNPDRP_ipl_od = DNPDRP_oct(:, 30:38);
-DNPDRP_axl_os = DNPDRP_oct(:, 2); DNPDRP_wrt_os = DNPDRP_oct(:, 39:47); DNPDRP_rnfl_os = DNPDRP_oct(:, 48:56); DNPDRP_gcl_os = DNPDRP_oct(:, 57:65); DNPDRP_ipl_os = DNPDRP_oct(:, 66:74);
 
+% VOG list and labels
+DNPDRP_vog = DNPDRP(:, 124:135);
+DNPDRP_hsl = DNPDRP_vog(:, 1:4); DNPDRP_hsa = DNPDRP_vog(:, 5:8); DNPDRP_hpg = DNPDRP_vog(:, 9:12);
+DNPDR_vog_items = ["HS Latency (OD, Rt)", "HS Latency (OD, Lt)", "HS Latency (OS, Rt)", "HS Latency (OS, Lt)", "HS Accuracy (OD, Rt)", ...
+"HS Accuracy (OD, Lt)", "HS Accuracy (OS, Rt)", "HS Accuracy (OS, Lt)", "HP Gain (OD, Rt)", "HP Gain (OD, Lt)", "HP Gain (OS, Rt)", "HP Gain (OS, Lt)"];
+
+% OCT list and labels
+DNPDRP_oct = DNPDRP(:, 138:end);
+DNPDRP_axl_od = DNPDRP_oct(:, 1);
+DNPDRP_wrt_od = DNPDRP_oct(:, 3:11); DNPDRP_rnfl_od = DNPDRP_oct(:, 12:20); DNPDRP_gcl_od = DNPDRP_oct(:, 21:29); DNPDRP_ipl_od = DNPDRP_oct(:, 30:38);
+DNPDRP_axl_os = DNPDRP_oct(:, 2);
+DNPDRP_wrt_os = DNPDRP_oct(:, 39:47); DNPDRP_rnfl_os = DNPDRP_oct(:, 48:56); DNPDRP_gcl_os = DNPDRP_oct(:, 57:65); DNPDRP_ipl_os = DNPDRP_oct(:, 66:74);
+DNPDR_eye_items = ["Axis length (OD)", "Axis length (OS)"];
+DNPDR_oct_items = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+% Control info
 % PID, Sex, Age, YOB, UPDRS_year, UPDRS_month, MMSE_year, MMSE_month, KVHQ_year, KVHQ_month, PDSS_year, PDSS_month, Hue_year, Hue_month
 DNPDRC_info = DNPDRC(:, [1:6, 73:74, 76:77, 98:99, 115:116]);
 
 DNPDRC_updrs = DNPDRC(:, 7:72);
-DNPDRC_u1 = DNPDRC_updrs(:, 1:13); DNPDRC_u2 = DNPDRC_updrs(:, 14:26); DNPDRC_u3 = DNPDRC_updrs(:, 27:59); DNPDRC_u4 = DNPDRC_updrs(:, 60:63); DNPDRC_hy = DNPDRC_updrs(:, 64);
+DNPDRC_u1 = DNPDRC_updrs(:, 1:13); DNPDRC_u2 = DNPDRC_updrs(:, 14:26); DNPDRC_u3 = DNPDRC_updrs(:, 27:59); DNPDRC_u4 = DNPDRC_updrs(:, 60:65); 
+DNPDRC_hy = DNPDRC_updrs(:, 66);
 DNPDRC_mmse = DNPDRC(:, 75);
 DNPDRC_kvhq = DNPDRC(:, 78:97);
 DNPDRC_kvhq1 = DNPDRC_kvhq(:, 1:10); DNPDRC_kvhq2 = DNPDRC_kvhq(:, 11:20);
@@ -115,11 +143,22 @@ disp(tableDataC);
 %DNPDR_PlotBar(DNPDRP_kvhq1, "KVHQ part 1", DNPDR_kvhq1_items);
 %DNPDR_PlotBar(DNPDRP_kvhq2, "KVHQ part 2", DNPDR_kvhq2_items);
 %DNPDR_PlotBar(DNPDRP_pdss, "PDSS score", DNPDR_pdss_items);
+%DNPDR_PlotBar(DNPDRP_vog, "VOG score", DNPDR_vog_items, false);
+%DNPDR_PlotBar([DNPDRP_axl_od, DNPDRP_axl_os], "Eye axial length", DNPDR_eye_items, false);
+%DNPDR_PlotBar(DNPDRP_wrt_od, "OCT, WRT layer, OD", DNPDR_oct_items, false);
+%DNPDR_PlotBar(DNPDRP_wrt_os, "OCT, WRT layer, OS", DNPDR_oct_items, false);
+%DNPDR_PlotBar(DNPDRP_rnfl_od, "OCT, RNFL layer, OD", DNPDR_oct_items, false);
+%DNPDR_PlotBar(DNPDRP_rnfl_os, "OCT, RNFL layer, OS", DNPDR_oct_items, false);
+%DNPDR_PlotBar(DNPDRP_gcl_od, "OCT, GCL layer, OD", DNPDR_oct_items, false);
+%DNPDR_PlotBar(DNPDRP_gcl_os, "OCT, GCL layer, OS", DNPDR_oct_items, false);
+%DNPDR_PlotBar(DNPDRP_ipl_od, "OCT, IPL layer, OD", DNPDR_oct_items, false);
+%DNPDR_PlotBar(DNPDRP_ipl_os, "OCT, IPL layer, OS", DNPDR_oct_items, false);
 
 % (Control group) Plot bar chart for UPDRS part 1, 2, 3, MMSE score, KVHQ part 1, 2, PDSS score
 %DNPDR_PlotBar(DNPDRC_u1, "UPDRS part 1", DNPDR_u1_items);
 %DNPDR_PlotBar(DNPDRC_u2, "UPDRS part 2", DNPDR_u2_items);
 %DNPDR_PlotBar(DNPDRC_u3, "UPDRS part 3", DNPDR_u3_items);
+%DNPDR_PlotBar(DNPDRC_hy, "H-Y score", DNPDR_hy_items);
 %DNPDR_PlotBar(DNPDRC_mmse, "MMSE score", DNPDR_mmse_items);
 %DNPDR_PlotBar(DNPDRC_kvhq1, "KVHQ part 1", DNPDR_kvhq1_items);
 %DNPDR_PlotBar(DNPDRC_kvhq2, "KVHQ part 2", DNPDR_kvhq2_items);

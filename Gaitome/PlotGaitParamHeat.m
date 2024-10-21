@@ -16,13 +16,12 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [] = PlotGaitParamHeat(cngdat_aPDoff, cngdat_HC, cngdat_ePD, saveDir)
+function [] = PlotGaitParamHeat(cngdat_MSACSc, saveDir)
 
 gph = figure;
-imagesc([cngdat_aPDoff; zeros(1, 19); cngdat_HC; zeros(1, 19); cngdat_ePD]);
+imagesc([cngdat_MSACSc]);
 %yline(size(cngdat_aPDoff, 1)+0.5, "LineWidth", 2, "Color", [0 0 0], "Alpha", 1);
 %yline(size(cngdat_aPDoff, 1)+size(cngdat_HC, 1)+0.5, "LineWidth", 2, "Color", [0 0 0], "Alpha", 1);
-title('aPD vs HC vs ePD gait parameters')
 clim([-3, 3]);
 colormap(redblue)
 colorbar

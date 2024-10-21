@@ -52,13 +52,13 @@ MSAC_u1 = tdat(MSAC_idx, 29); MSAC_u2 = tdat(MSAC_idx, 30);
 MSAC_ut = MSAC_u1 + MSAC_u2; MSAC_dur = tdat(MSAC_idx, 32);
 
 % Display clinical characteristics
-table_X = ["N"; "Age"; "Sex"; "Height"; "Duration"; "UPDRS p1"; "UPDRS p2"; "UPDRS p3"];
-table_HC = [string(length(HC_age)); describedata(HC_age, 'avg'); describedata(HC_sex, 'sex'); describedata(HC_height, 'avg'); "N/A"; "N/A"; "N/A"; "N/A"];
-table_RBD = [string(length(RBD_age)); describedata(RBD_age, 'avg'); describedata(RBD_sex, 'sex'); describedata(RBD_height, 'avg'); "N/A"; describedata(RBD_u1, 'avg'); describedata(RBD_u2, 'avg'); describedata(RBD_u3, 'avg')];
-table_ePD = [string(length(ePD_age)); describedata(ePD_age, 'avg'); describedata(ePD_sex, 'sex'); describedata(ePD_height, 'avg'); describedata(ePD_dur, 'avg'); describedata(ePD_u1, 'avg'); describedata(ePD_u2, 'avg'); describedata(ePD_u3, 'avg')];
-table_aPD = [string(length(aPDoff_age)); describedata(aPDoff_age, 'avg'); describedata(aPDoff_sex, 'sex'); describedata(aPDoff_height, 'avg'); describedata(aPDoff_dur, 'avg'); describedata(aPDoff_u1, 'avg'); describedata(aPDoff_u2, 'avg'); describedata(aPDoff_u3, 'avg')];
-table_MSAC = [string(length(MSAC_age)); describedata(MSAC_age, 'avg'); describedata(MSAC_sex, 'sex'); describedata(MSAC_height, 'avg'); describedata(MSAC_dur, 'avg'); describedata(MSAC_u1, 'avg'); describedata(MSAC_u2, 'avg'); "N/A"];
-charTable = table(table_X, table_HC, table_RBD, table_ePD, table_aPD, table_MSAC);
+%table_X = ["N"; "Age"; "Sex"; "Height"; "Duration"; "UPDRS p1"; "UPDRS p2"; "UPDRS p3"];
+%table_HC = [string(length(HC_age)); descvar(HC_age, 'avg'); descvar(HC_sex, 'sex'); descvar(HC_height, 'avg'); "N/A"; "N/A"; "N/A"; "N/A"];
+%table_RBD = [string(length(RBD_age)); descvar(RBD_age, 'avg'); descvar(RBD_sex, 'sex'); descvar(RBD_height, 'avg'); "N/A"; descvar(RBD_u1, 'avg'); descvar(RBD_u2, 'avg'); descvar(RBD_u3, 'avg')];
+%table_ePD = [string(length(ePD_age)); descvar(ePD_age, 'avg'); descvar(ePD_sex, 'sex'); descvar(ePD_height, 'avg'); descvar(ePD_dur, 'avg'); descvar(ePD_u1, 'avg'); descvar(ePD_u2, 'avg'); descvar(ePD_u3, 'avg')];
+%table_aPD = [string(length(aPDoff_age)); descvar(aPDoff_age, 'avg'); descvar(aPDoff_sex, 'sex'); descvar(aPDoff_height, 'avg'); descvar(aPDoff_dur, 'avg'); descvar(aPDoff_u1, 'avg'); descvar(aPDoff_u2, 'avg'); descvar(aPDoff_u3, 'avg')];
+%table_MSAC = [string(length(MSAC_age)); descvar(MSAC_age, 'avg'); descvar(MSAC_sex, 'sex'); descvar(MSAC_height, 'avg'); descvar(MSAC_dur, 'avg'); descvar(MSAC_u1, 'avg'); descvar(MSAC_u2, 'avg'); "N/A"];
+%charTable = table(table_X, table_HC, table_RBD, table_ePD, table_aPD, table_MSAC);
 
 %% Multivariate linear regression
 cngdat = GaitPatternMLR(tdat, ngdat_p);
@@ -71,7 +71,7 @@ cngdat_MSAC = cngdat(MSAC_idx, :);
 cngdat_MSACSc = cngdat(MSACSc_idx, :);
 
 % Plot gait parameter heatmap
-%PlotGaitParamHeat(cngdat_aPDoff, cngdat_HC, cngdat_ePD, saveDir);
+PlotGaitParamHeat(cngdat_MSACSc, saveDir);
 
 %============================%
 % Select groups for analysis %

@@ -92,7 +92,7 @@ MSAC_numeric = MSAC_data{:, vartype('numeric')};
 MSAC_tdat = MSAC_numeric(:, 2:32);
 % Import MSACSc_tdat (group for MSAC scoring, total 39)
 % [PID, Name, Age, Sex, Height, 24 params, umsar1, 2, null, duration]
-MSACSc_data = readtable('data\MSAC_tdat_41.xlsx', 'VariableNamingRule', 'preserve');
+MSACSc_data = readtable('data\MSAC_tdat_39.xlsx', 'VariableNamingRule', 'preserve');
 MSACSc_numeric = MSACSc_data{:, vartype('numeric')};
 MSACSc_tdat = MSACSc_numeric(:, 2:32);
 
