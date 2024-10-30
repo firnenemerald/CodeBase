@@ -117,7 +117,7 @@ title(expTitle);
 xlabel('Gait parameters');
 %ylabel('Z-score');
 
-saveas(figheat, strcat(saveDir, Y_name, 'patternHeat'), 'svg');
-saveas(figheat, strcat(saveDir, Y_name, 'patternHeat'), 'png');
+saveas(figheat, strcat(saveDir, Y_name, '_patternHeat'), 'svg');
+saveas(figheat, strcat(saveDir, Y_name, '_patternHeat'), 'png');
 
 end

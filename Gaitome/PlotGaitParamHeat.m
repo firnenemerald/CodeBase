@@ -1,4 +1,4 @@
-%% PlotGaitParamHeat.m (ver 1.0.240923)
+%% PlotGaitParamHeat.m (ver 1.1.241024)
 % Plot gait parameters in a heatmap
 
 % Copyright (C) 2024 Chanhee Jeong
@@ -16,10 +16,12 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [] = PlotGaitParamHeat(cngdat_MSACSc, saveDir)
+function [] = PlotGaitParamHeat(cngdat, scoreGroup, saveDir)
+
+gName = Num2Group(scoreGroup(2));
 
 gph = figure;
-imagesc([cngdat_MSACSc]);
+imagesc([cngdat]);
 %yline(size(cngdat_aPDoff, 1)+0.5, "LineWidth", 2, "Color", [0 0 0], "Alpha", 1);
 %yline(size(cngdat_aPDoff, 1)+size(cngdat_HC, 1)+0.5, "LineWidth", 2, "Color", [0 0 0], "Alpha", 1);
 clim([-3, 3]);
@@ -27,7 +29,7 @@ colormap(redblue)
 colorbar
 axis off
 
-saveas(gph, strcat(saveDir, 'GaitParamHeat'), 'svg');
-saveas(gph, strcat(saveDir, 'GaitParamHeat'), 'png');
+saveas(gph, strcat(saveDir, gName, '_GaitParamHeat'), 'svg');
+saveas(gph, strcat(saveDir, gName, '_GaitParamHeat'), 'png');
 
 end

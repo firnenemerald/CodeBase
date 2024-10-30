@@ -16,11 +16,11 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function [] = PlotCITPETCorr(score, ePD_citpet, scoreGroup, roiName, latName)
+function [] = PlotCITPETCorr(score, citpet, scoreGroup, roiName, latName, saveDir)
 
-ePD_nanIdx = any(isnan(ePD_citpet), 2);
-score(ePD_nanIdx, :) = [];
-ePD_citpet(ePD_nanIdx, :) = [];
+citpet_nanIdx = any(isnan(citpet), 2);
+score(citpet_nanIdx, :) = [];
+citpet(citpet_nanIdx, :) = [];
 
 patternName = Num2Group(scoreGroup(2));
 
@@ -32,7 +32,7 @@ roiList3 = {'PC_rat', 'CP_rat', 'apP_rat'};
 
 columnNum = 0;
 if isscalar(find(strcmpi(roiList1, roiName)))
-    columnNum = find(strcmpi(roiList1, 'C'));
+    columnNum = find(strcmpi(roiList1, roiName));
     switch latName
         case 'b'
             columnNum = columnNum;
@@ -54,18 +54,18 @@ elseif isscalar(find(strcmpi(roiList3, roiName)))
             columnNum = columnNum + 6;
     end
 elseif (roiName == 'ALL')
-    PlotCITPETCorrTable(score, ePD_citpet);
+    PlotCITPETCorrTable(score, citpet, patternName, saveDir);
     return
 end
 
-citData = ePD_citpet(:, columnNum);
+citData = citpet(:, columnNum);
 
 figure
 hold on
 scatter(citData, score, 20, 'filled', 'MarkerFaceColor', 'b');
 
 grid on
-title('(ePD) CIT PET roi value vs gait score');
+title('CIT PET roi value vs gait score');
 xlabel(strcat('roi = ', {' '}, roiName, {' '}, '(', latName, ')'), "Interpreter", "none");
 ylabel(strcat(patternName, {' '}, 'gait pattern score'), "Interpreter", "none");
 
@@ -81,13 +81,13 @@ hold off
 
 end
 
-function [] = PlotCITPETCorrTable(score, ePD_citpet)
+function [] = PlotCITPETCorrTable(score, citpet, patternName, saveDir)
 
-roiNum = size(ePD_citpet, 2);
+roiNum = size(citpet, 2);
 corrTable = zeros(1, roiNum);
 signTable = ones(1, roiNum);
 for idx = 1:roiNum
-    [r, p] = corr(ePD_citpet(:, idx), score);
+    [r, p] = corr(citpet(:, idx), score);
     corrTable(1, idx) = r;
     signTable(1, idx) = p;
 end
@@ -269,5 +269,8 @@ for i = 0.5:12.5
     plot(ax4, [i, i], [0.5, 1.5], 'k-', 'LineWidth', 1);
 end
 hold off
+
+saveas(figCIT, strcat(saveDir, patternName, '_CITPETCorr'), 'svg');
+saveas(figCIT, strcat(saveDir, patternName, '_CITPETCorr'), 'png');
 
 end

@@ -44,8 +44,8 @@ xlabel(strcat(updrsPart, '{ }', 'score'));
 ylabel(strcat(patternName, '{ }', 'gait pattern Z-score'));
 switch groupName
     case 'aPD'
-        xlim([15, 85]);
-        ylim([2, 10]);
+        xlim([2, 35]);
+        ylim([0, 10]);
     case 'ePD'
         xlim([0, 55]);
         ylim([0, 4.5]);

@@ -1,4 +1,4 @@
-%% GaitomePD.m (ver 1.1.240924)
+%% GaitomePD.m (ver 1.2.241024)
 % Gaitome base code for video-based Parkinson disease pattern scoring
 
 % Copyright (C) 2024 Chanhee Jeong, Pil-ung Lee, Jung Hwan Shin
@@ -19,10 +19,10 @@
 clear
 close all
 
-saveDir = 'C:\\Users\\chanh\\OneDrive\\문서\\__My Documents__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures\\';
+saveDir = 'C:\\Users\\chanh\\OneDrive\\문서\\__My Documents__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures\\fig_241025\\';
 
 %% Import gait parameters
-[tdat, ngdat_p, aPD_ledd, aPDon_nanIdx, ePD_citpet] = GetParams();
+[tdat, ngdat_p, ePD_updrs, ePD_citpet, aPD_ledd, aPDoff_updrs, aPD_citpet, aPDon_updrs] = GetParams();
 
 % Get each group's indices
 HC_idx = tdat(:, 1) == 1;
@@ -51,15 +51,6 @@ MSAC_age = tdat(MSAC_idx, 2); MSAC_sex = tdat(MSAC_idx, 3); MSAC_height = tdat(M
 MSAC_u1 = tdat(MSAC_idx, 29); MSAC_u2 = tdat(MSAC_idx, 30);
 MSAC_ut = MSAC_u1 + MSAC_u2; MSAC_dur = tdat(MSAC_idx, 32);
 
-% Display clinical characteristics
-%table_X = ["N"; "Age"; "Sex"; "Height"; "Duration"; "UPDRS p1"; "UPDRS p2"; "UPDRS p3"];
-%table_HC = [string(length(HC_age)); descvar(HC_age, 'avg'); descvar(HC_sex, 'sex'); descvar(HC_height, 'avg'); "N/A"; "N/A"; "N/A"; "N/A"];
-%table_RBD = [string(length(RBD_age)); descvar(RBD_age, 'avg'); descvar(RBD_sex, 'sex'); descvar(RBD_height, 'avg'); "N/A"; descvar(RBD_u1, 'avg'); descvar(RBD_u2, 'avg'); descvar(RBD_u3, 'avg')];
-%table_ePD = [string(length(ePD_age)); descvar(ePD_age, 'avg'); descvar(ePD_sex, 'sex'); descvar(ePD_height, 'avg'); descvar(ePD_dur, 'avg'); descvar(ePD_u1, 'avg'); descvar(ePD_u2, 'avg'); descvar(ePD_u3, 'avg')];
-%table_aPD = [string(length(aPDoff_age)); descvar(aPDoff_age, 'avg'); descvar(aPDoff_sex, 'sex'); descvar(aPDoff_height, 'avg'); descvar(aPDoff_dur, 'avg'); descvar(aPDoff_u1, 'avg'); descvar(aPDoff_u2, 'avg'); descvar(aPDoff_u3, 'avg')];
-%table_MSAC = [string(length(MSAC_age)); descvar(MSAC_age, 'avg'); descvar(MSAC_sex, 'sex'); descvar(MSAC_height, 'avg'); descvar(MSAC_dur, 'avg'); descvar(MSAC_u1, 'avg'); descvar(MSAC_u2, 'avg'); "N/A"];
-%charTable = table(table_X, table_HC, table_RBD, table_ePD, table_aPD, table_MSAC);
-
 %% Multivariate linear regression
 cngdat = GaitPatternMLR(tdat, ngdat_p);
 cngdat_HC = cngdat(HC_idx, :);
@@ -70,13 +61,13 @@ cngdat_aPDon = cngdat(aPDon_idx, :);
 cngdat_MSAC = cngdat(MSAC_idx, :);
 cngdat_MSACSc = cngdat(MSACSc_idx, :);
 
-% Plot gait parameter heatmap
-PlotGaitParamHeat(cngdat_MSACSc, saveDir);
-
 %============================%
 % Select groups for analysis %
-scoreGroup = [1, 6];         %
+scoreGroup = [1, 4];         %
 %============================%
+
+% Plot gait parameter heatmap
+%PlotGaitParamHeat(cngdat_HC, scoreGroup, saveDir);
 
 %% SSM-PCA and scoring
 [PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, scoreGroup, saveDir, false);
@@ -114,13 +105,28 @@ score_MSACSc = (score_MSACSc - msHC)/ssHC;
 %PlotPatternScore(tdat, cngdat, GIS_Yz, scoreGroup, saveDir);
 
 % Plot and correlate score vs updrs
-%PlotUPDRSCorr(aPDoff_ut, score_aPDoff, scoreGroup, "aPD", "ut", saveDir);
+%PlotUPDRSCorr(aPDoff_u2, score_aPDoff, scoreGroup, "aPD", "u2", saveDir);
 %PlotUPDRSCorr(ePD_ut, score_ePD, scoreGroup, "ePD", "ut", saveDir);
 
+% Plot and correlate score vs individual updrs scores
+%PlotUPDRSIndivCorr(aPDoff_updrs, score_aPDoff, scoreGroup, "aPD", "u3", saveDir)
+
 % Compare aPD on vs off states with LEDD
-aPDoff_concat = [score_aPDoff, aPDoff_u1, aPDoff_u2, aPDoff_u3, aPDoff_ut];
-aPDoff_concat(aPDon_nanIdx, :) = [];
-aPDon_concat = [score_aPDon, aPDon_u1, aPDon_u2, aPDon_u3, aPDon_ut];
+%aPDoff_concat = [score_aPDoff, aPDoff_u1, aPDoff_u2, aPDoff_u3, aPDoff_ut];
+%aPDoff_concat(aPDon_nanIdx, :) = [];
+%aPDon_concat = [score_aPDon, aPDon_u1, aPDon_u2, aPDon_u3, aPDon_ut];
 %PlotOnOffBar(aPDoff_concat, aPDon_concat, aPD_ledd, 'u3', saveDir);
 
-% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'ALL', 'b');
+% Plot CITPET correlation
+% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'ALL', 'b', saveDir);
+% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'Pdp', 'b', saveDir);
+% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'Pdp', 'l', saveDir);
+% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'Pdp', 'r', saveDir);
+% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'apP_rat', 'b', saveDir);
+% PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'LC', 'b', saveDir);
+PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'ALL', 'b', saveDir);
+% PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'Pdp', 'b', saveDir);
+% PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'Pdp', 'l', saveDir);
+% PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'Pdp', 'r', saveDir);
+% PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'apP_rat', 'b', saveDir);
+% PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'LC', 'b', saveDir);
