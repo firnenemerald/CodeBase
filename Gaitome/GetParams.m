@@ -1,5 +1,5 @@
-%% GetParams.m (ver 1.2.241023)
-% Import gait parameters from gait extractor result files
+%% GetParams.m
+% Import gait parameters from gait extractor result .csv files
 
 % Copyright (C) 2024 Jung Hwan Shin, Pil-ung Lee, Chanhee Jeong
 
@@ -26,30 +26,30 @@
 % Sex 1 = Male, 2 = Female
 
 % Walking variables (10)
-% 1 - step length (mean)*
+% 1 - step length (mean)
 % 2 - step length (cv)
-% 3 - step time (mean)*
+% 3 - step time (mean)
 % 4 - step time (cv)
-% 5 - step width (mean)*
-% 6 - step width (cv)
-% 7 - cadence*
-% 8 - velocity*
-% 9 - step length asymmetry*
-% 10 - arm swing asymmetry*
+% 5 - step width (mean)
+% 6 - step width (cv) -> omit in partial score
+% 7 - cadence
+% 8 - velocity
+% 9 - step length asymmetry
+% 10 - arm swing asymmetry
 
 % Turning variables (12)
-% 11 - turning time (mean)*
-% 12 - turning time (cv)
-% 13 - turning step length (mean)*
-% 14 - turning step length (cv)
-% 15 - turning step time (mean)*
-% 16 - turning step time (cv)
-% 17 - turning step width (mean)*
-% 18 - turning step width (cv)
-% 19 - turning step number (mean)*
-% 20 - turning step number (cv)
-% 21 - turning cadence*
-% 22 - turning velocity*
+% 11 - turning time (mean)
+% 12 - turning time (cv) -> omit in partial score
+% 13 - turning step length (mean)
+% 14 - turning step length (cv) -> omit in partial score
+% 15 - turning step time (mean)
+% 16 - turning step time (cv) -> omit in partial score
+% 17 - turning step width (mean)
+% 18 - turning step width (cv) -> omit in partial score
+% 19 - turning step number (mean)
+% 20 - turning step number (cv) -> omit in partial score
+% 21 - turning cadence
+% 22 - turning velocity
 
 % Posture variables (2)
 % 23 - anterior flexion angle*
@@ -124,7 +124,7 @@ tdat = [HC; RBD; ePD; aPDoff; aPDon; MSAC; MSACSc];
 % Partial gait parameters are acquired by omitting cv parameters
 gdat = tdat(:, 5:28);
 gdat_p = gdat;
-gdat_p(:, [12, 14, 16, 18, 20]) = [];
+gdat_p(:, [6, 12, 14, 16, 18, 20]) = [];
 
 % Remove data with NaN element within partial gait parameters
 nanIdx = any(isnan(gdat_p), 2);
@@ -136,7 +136,7 @@ gdat_p(nanIdx, :) = [];
 % Remove LEDD data with NaN element within aPDon partial gait parameters
 aPDon_g = aPDon(:, 4:27);
 aPDon_g_p = aPDon_g;
-aPDon_g_p(:, [12, 14, 16, 18, 20]) = [];
+aPDon_g_p(:, [6, 12, 14, 16, 18, 20]) = [];
 aPDon_nanIdx = any(isnan(aPDon_g_p), 2);
 aPD_ledd(aPDon_nanIdx, :) = [];
 

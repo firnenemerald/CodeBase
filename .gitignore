@@ -1,3 +1,9 @@
+/.vscode
+
+/ChartReview/build
+/ChartReview/dist
+/ChartReview/list
+
 /DNPDRetina/data/
 
 /Gaitome/data/

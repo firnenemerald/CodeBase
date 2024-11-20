@@ -130,7 +130,7 @@ ylim([-4, 10]);
 
 hold off
 
-saveas(barComp, strcat(saveDir, Y_name, '_groupcomp'), 'svg');
-saveas(barComp, strcat(saveDir, Y_name, '_groupcomp'), 'png');
+%saveas(barComp, strcat(saveDir, Y_name, '_groupcomp'), 'svg');
+%saveas(barComp, strcat(saveDir, Y_name, '_groupcomp'), 'png');
 
 end

@@ -24,9 +24,11 @@ expTitle = strcat(X_name, {' '}, 'vs', {' '}, Y_name);
 
 paramLength = length(GIS_Yz);
 switch paramLength
-    case 19
+    case 18 % Partial score without step width var
+        bar_xlabel = {'step length', 'step length var', 'step time', 'step time var', 'step width', 'cadence', 'velocity', 'step length asymmetry', 'arm swing asymmetry', 'turning time', 'turning step length', 'turning step time', 'turning step width', 'turning step number', 'turning cadence', 'turning velocity', 'ant. flx. angle', 'dropped head angle'};
+    case 19 % Partial score
         bar_xlabel = {'step length', 'step length var', 'step time', 'step time var', 'step width', 'step width var', 'cadence', 'velocity', 'step length asymmetry', 'arm swing asymmetry', 'turning time', 'turning step length', 'turning step time', 'turning step width', 'turning step number', 'turning cadence', 'turning velocity', 'ant. flx. angle', 'dropped head angle'};
-    case 24
+    case 24 % Full score
         bar_xlabel = {'step length', 'step length (cv)', 'step time', 'step time (cv)','step width', 'step width (cv)', 'cadence', 'velocity', 'step length asymmetry', 'arm swing asymmetry', 'turning time', 'turning time (cv)', 'turning step length', 'turning step length (cv)', 'turning step time', 'turning step time(cv)', 'turning step width', 'turning step width (cv)', 'turning step number', 'turning step number (cv)', 'turning cadence', 'turning velocity', 'ant. flx. angle', 'dropped head angle'};
 end
 

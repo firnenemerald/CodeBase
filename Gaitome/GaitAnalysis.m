@@ -1,5 +1,5 @@
-%% GaitomePD.m (ver 1.2.241024)
-% Gaitome base code for video-based Parkinson disease pattern scoring
+%% GaitAnalysis.m
+% Main code for video-based gait analysis and gait pattern scoring
 
 % Copyright (C) 2024 Chanhee Jeong, Pil-ung Lee, Jung Hwan Shin
 
@@ -19,7 +19,14 @@
 clear
 close all
 
-saveDir = 'C:\\Users\\chanh\\OneDrive\\문서\\__My Documents__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures\\fig_241025\\';
+% Set the save directory as ../Figures/YYMMDD/
+currentDate = datetime('today', 'Format', 'yyMMdd');
+saveDir = fullfile('C:\\Users\\chanh\\OneDrive\\문서\\__My Documents__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures', [char(currentDate), '\\']);
+
+% Create the directory if it does not exist
+if ~exist(saveDir, 'dir')
+    mkdir(saveDir);
+end
 
 %% Import gait parameters
 [tdat, ngdat_p, ePD_updrs, ePD_citpet, aPD_ledd, aPDoff_updrs, aPD_citpet, aPDon_updrs] = GetParams();
@@ -63,20 +70,20 @@ cngdat_MSACSc = cngdat(MSACSc_idx, :);
 
 %============================%
 % Select groups for analysis %
-scoreGroup = [1, 4];         %
+scoreGroup = [1, 6];         %
 %============================%
 
 % Plot gait parameter heatmap
 %PlotGaitParamHeat(cngdat_HC, scoreGroup, saveDir);
 
 %% SSM-PCA and scoring
-[PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, scoreGroup, saveDir, false);
+[PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, scoreGroup, saveDir, true);
 
 % Plot covariate matrix and explained components
-%PlotPCAProcess(C, explained, scoreGroup, saveDir);
+PlotPCAProcess(C, explained, scoreGroup, saveDir);
 
 % Plot gait pattern bar graph
-%PlotGaitPattern(GIS_Yz, scoreGroup, saveDir);
+PlotGaitPattern(GIS_Yz, scoreGroup, saveDir);
 
 % Calculate each group's gait pattern score
 score_HC = cngdat_HC * GIS_Yz;
@@ -102,7 +109,7 @@ score_MSACSc = (score_MSACSc - msHC)/ssHC;
 % PlotParameterRegression(tdat, ngdat_p, cngdat, GIS_Yz, 'height');
 
 % Plot and compare multiple group pattern score
-%PlotPatternScore(tdat, cngdat, GIS_Yz, scoreGroup, saveDir);
+PlotPatternScore(tdat, cngdat, GIS_Yz, scoreGroup, saveDir);
 
 % Plot and correlate score vs updrs
 %PlotUPDRSCorr(aPDoff_u2, score_aPDoff, scoreGroup, "aPD", "u2", saveDir);
@@ -124,7 +131,7 @@ score_MSACSc = (score_MSACSc - msHC)/ssHC;
 % PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'Pdp', 'r', saveDir);
 % PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'apP_rat', 'b', saveDir);
 % PlotCITPETCorr(score_ePD, ePD_citpet, scoreGroup, 'LC', 'b', saveDir);
-PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'ALL', 'b', saveDir);
+% PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'ALL', 'b', saveDir);
 % PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'Pdp', 'b', saveDir);
 % PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'Pdp', 'l', saveDir);
 % PlotCITPETCorr(score_aPDoff, aPD_citpet, scoreGroup, 'Pdp', 'r', saveDir);
