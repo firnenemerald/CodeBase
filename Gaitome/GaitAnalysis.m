@@ -21,7 +21,7 @@ close all
 
 % Set the save directory as ../Figures/YYMMDD/
 currentDate = datetime('today', 'Format', 'yyMMdd');
-saveDir = fullfile('C:\\Users\\chanh\\OneDrive\\문서\\__My Documents__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures', [char(currentDate), '\\']);
+saveDir = fullfile('C:\\Users\\chanh\\OneDrive\\문서\\__My Documents__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures', [char(currentDate), '_PD', '\\']);
 
 % Create the directory if it does not exist
 if ~exist(saveDir, 'dir')
@@ -70,7 +70,7 @@ cngdat_MSACSc = cngdat(MSACSc_idx, :);
 
 %============================%
 % Select groups for analysis %
-scoreGroup = [1, 6];         %
+scoreGroup = [1, 4];         %
 %============================%
 
 % Plot gait parameter heatmap
