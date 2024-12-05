@@ -21,7 +21,7 @@ close all
 
 % Set the save directory as ../Figures/YYMMDD/
 currentDate = datetime('today', 'Format', 'yyMMdd');
-saveDir = fullfile('C:\\Users\\chanh\\OneDrive\\문서\\__My Documents__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures', [char(currentDate), '_PD', '\\']);
+saveDir = fullfile('C:\\Users\\chanh\\OneDrive\\문서\\__MyDocuments__\\3. Research\\Gait Analysis (Pf. Shin)\\Figures', [char(currentDate), '_PD', '\\']);
 
 % Create the directory if it does not exist
 if ~exist(saveDir, 'dir')

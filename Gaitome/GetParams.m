@@ -124,7 +124,7 @@ tdat = [HC; RBD; ePD; aPDoff; aPDon; MSAC; MSACSc];
 % Partial gait parameters are acquired by omitting cv parameters
 gdat = tdat(:, 5:28);
 gdat_p = gdat;
-gdat_p(:, [6, 12, 14, 16, 18, 20]) = [];
+gdat_p(:, [12, 14, 16, 18, 20]) = [];
 
 % Remove data with NaN element within partial gait parameters
 nanIdx = any(isnan(gdat_p), 2);
@@ -136,7 +136,7 @@ gdat_p(nanIdx, :) = [];
 % Remove LEDD data with NaN element within aPDon partial gait parameters
 aPDon_g = aPDon(:, 4:27);
 aPDon_g_p = aPDon_g;
-aPDon_g_p(:, [6, 12, 14, 16, 18, 20]) = [];
+aPDon_g_p(:, [12, 14, 16, 18, 20]) = [];
 aPDon_nanIdx = any(isnan(aPDon_g_p), 2);
 aPD_ledd(aPDon_nanIdx, :) = [];
 

@@ -1,4 +1,4 @@
-%% DNPDR_GetData.m (ver 1.0.241011)
+%% DNPDR_GetData.m
 % Import DNPDRP, DNPDRC data from DNPDR_data.xlsx file
 
 % Copyright (C) 2024 Chanhee Jeong
