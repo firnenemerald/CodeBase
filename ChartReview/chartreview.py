@@ -32,7 +32,7 @@ class MacroApp:
         tk.Label(self.frame1, text="Locate .csv file with Patient ID column", font=("Helvetica", 18)).pack(pady=20)
 
         # File selection button
-        find_button = tk.Button(self.frame1, text="Find", command=self.load_file, font=("Helvetica", 18), fg="green")
+        find_button = tk.Button(self.frame1, text="Find 🔎", command=self.load_file, font=("Helvetica", 18), fg="green")
         find_button.pack(pady=10, fill="none", expand=False)
 
         # File path display
@@ -40,7 +40,7 @@ class MacroApp:
         self.file_label.pack(pady=10, fill="x", expand=True)
 
         # Start button
-        self.start_button = tk.Button(self.frame1, text="Start", command=self.start_review, font=("Helvetica", 18), state=tk.DISABLED)
+        self.start_button = tk.Button(self.frame1, text="Start ▶", command=self.start_review, font=("Helvetica", 18), state=tk.DISABLED)
         self.start_button.pack(pady=10, fill="none", expand=True)
 
     def setup_frame2(self):
