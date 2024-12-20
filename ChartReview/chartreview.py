@@ -250,7 +250,7 @@ class MacroApp:
     def save_to_file(self):
         if self.data is not None and self.save_file_path:
             try:
-                self.data.to_csv(self.save_file_path, index=False, encoding='utf-8')
+                self.data.to_csv(self.save_file_path, index=False, encoding='utf-8-sig')  # Use 'utf-8-sig'
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save file: {str(e)}")
     

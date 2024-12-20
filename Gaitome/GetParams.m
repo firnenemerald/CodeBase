@@ -1,7 +1,7 @@
 %% GetParams.m
 % Import gait parameters from gait extractor result .csv files
 
-% Copyright (C) 2024 Jung Hwan Shin, Pil-ung Lee, Chanhee Jeong
+% Copyright (C) 2024 Chanhee Jeong, Pil-ung Lee, Jung Hwan Shin
 
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by

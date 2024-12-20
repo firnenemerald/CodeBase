@@ -109,7 +109,7 @@ score_MSACSc = (score_MSACSc - msHC)/ssHC;
 % PlotParameterRegression(tdat, ngdat_p, cngdat, GIS_Yz, 'height');
 
 % Plot and compare multiple group pattern score
-PlotPatternScore(tdat, cngdat, GIS_Yz, scoreGroup, saveDir);
+%PlotPatternScore(tdat, cngdat, GIS_Yz, scoreGroup, saveDir);
 
 % Plot and correlate score vs updrs
 %PlotUPDRSCorr(aPDoff_u2, score_aPDoff, scoreGroup, "aPD", "u2", saveDir);
