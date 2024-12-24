@@ -24,25 +24,37 @@ clear; close all;
 % Exclude subjects with extensive missing data
 DNPDRC([1, 14], :) = [];
 
-% Patient info
-% PID, Sex, Age, YOB, Onset_year, Dx_year, Dx_month, UPDRS_year, UPDRS_month, MMSE_year, MMSE_month, ...
-% KVHQ_year, KVHQ_month, PDSS_year, PDSS_month, Hue_year, Hue_month, VOG_year, VOG_month, OCT_year, OCT_month
-DNPDRP_info = DNPDRP(:, [1:9, 76:77, 79:80, 101:102, 118:119, 122:123, 136:137]);
+%% Patient info
+% (subtotal 7 variables) Serial, Sex, Age, YOB, Onset_year, Dx_year, Dx_month
+DNPDRP_info = table2array(DNPDRP(:, 2:7)); % Leave Serial out
+fprintf("=== Patient Group (n=%d) ===\n", size(DNPDRP_info, 1));
+P_Onset_year = DNPDRP_info(:, 4);
+P_Dx_year = DNPDRP_info(:, 5) + DNPDRP_info(:, 6)/12;
+P_Dx_duration = P_Dx_year - P_Onset_year;
+P_sex = DNPDRP_info(:, 1); P_age = DNPDRP_info(:, 2);
 
-% Calculate durations
-DNPDRP_duration = DNPDRP_info(:, 6) + DNPDRP_info(:, 7)/12 - DNPDRP_info(:, 5);
-DNPDRP_updrsDuration = DNPDRP_info(:, 8) + DNPDRP_info(:, 9)/12 - DNPDRP_info(:, 5);
-DNPDRP_mmseDuration = DNPDRP_info(:, 10) + DNPDRP_info(:, 11)/12 - DNPDRP_info(:, 5);
-DNPDRP_kvhqDuration = DNPDRP_info(:, 12) + DNPDRP_info(:, 13)/12 - DNPDRP_info(:, 5);
-DNPDRP_pdssDuration = DNPDRP_info(:, 14) + DNPDRP_info(:, 15)/12 - DNPDRP_info(:, 5);
-DNPDRP_hueDuration = DNPDRP_info(:, 16) + DNPDRP_info(:, 17)/12 - DNPDRP_info(:, 5);
-DNPDRP_vogDuration = DNPDRP_info(:, 18) + DNPDRP_info(:, 19)/12 - DNPDRP_info(:, 5);
-DNPDRP_octDuration = DNPDRP_info(:, 20) + DNPDRP_info(:, 21)/12 - DNPDRP_info(:, 5);
+%% UPDRS
+% (subtotal 68 variables) UPDRS_year, UPDRS_month, UPDRS_part1 x 13, UPDRS_part2 x 13, UPDRS_part3 x 33, UPDRS_part4 x 6, HY
+DNPDRP_updrs = table2array(DNPDRP(:, 8:75));
+DNPDRP_u1 = DNPDRP_updrs(:, 3:15);
+fprintf("Loaded UPDRS part 1 scores, %d missing values\n", sum(FindNaN(DNPDRP_u1)));
+DNPDRP_u2 = DNPDRP_updrs(:, 16:28);
+fprintf("Loaded UPDRS part 2 scores, %d missing values\n", sum(FindNaN(DNPDRP_u2)));
+DNPDRP_u3 = DNPDRP_updrs(:, 29:61);
+fprintf("Loaded UPDRS part 3 scores, %d missing values\n", sum(FindNaN(DNPDRP_u3)));
+P_UPDRS_year = DNPDRP_updrs(:, 1) + DNPDRP_updrs(:, 2)/12;
+P_UPDRS_duration = P_UPDRS_year - P_Onset_year;
 
-% UPDRS list and labels
-DNPDRP_updrs = DNPDRP(:, 10:75);
-DNPDRP_u1 = DNPDRP_updrs(:, 1:13); DNPDRP_u2 = DNPDRP_updrs(:, 14:26); DNPDRP_u3 = DNPDRP_updrs(:, 27:59); DNPDRP_u4 = DNPDRP_updrs(:, 60:65);
-DNPDRP_hy = DNPDRP_updrs(:, 66);
+DNPDRP_u1 = RemoveNaN(DNPDRP_u1);
+DNPDRP_u2 = RemoveNaN(DNPDRP_u2);
+DNPDRP_u3 = RemoveNaN(DNPDRP_u3);
+
+DNPDRP_hy = DNPDRP_updrs(:, 68);
+fprintf("Loaded H-Y scores, %d missing values\n", sum(FindNaN(DNPDRP_hy)));
+
+P_HY_duration = P_UPDRS_duration(~FindNaN(DNPDRP_hy));
+DNPDRP_hy = RemoveNaN(DNPDRP_hy);
+
 DNPDR_u1_items = ["Cognitive impairment", "Hallucinations and psychosis", "Depressed mood", "Anxious mood", "Apathy", "Dopamine dysregulation", ...
 "Sleep problems", "Daytime sleepiness", "Pain and others", "Urinary problems", "Constipation", "Light headedness", "Fatigue"];
 DNPDR_u2_items = ["Speech", "Saliva drooling", "Chewing swallowing", "Eating tasks", "Dressing", "Hygiene", "Handwriting", "Doing hobbies", ...
@@ -54,88 +66,169 @@ DNPDR_u3_items = ["Speech", "Facial expression", "Rigidity (Neck)", "Rigidity (R
 "Rest tremor (LUE)", "Rest tremor (RLE)", "Rest tremor (LLE)", "Rest tremor (Jaw)", "Rest tremor constancy"];
 DNPDR_hy_items = "H-Y score";
 
-% MMSE list and labels
-DNPDRP_mmse = DNPDRP(:, 78);
+%% MMSE
+% (subtotal 3 variables) MMSE_year, MMSE_month, MMSE_score
+DNPDRP_mmse = table2array(DNPDRP(:, 76:78));
+fprintf("Loaded MMSE scores, %d missing values\n", sum(FindNaN(DNPDRP_mmse)));
+P_MMSE_year = DNPDRP_mmse(:, 1) + DNPDRP_mmse(:, 2)/12;
+P_MMSE_duration = P_MMSE_year - P_Onset_year;
+
+P_MMSE_duration = P_MMSE_duration(~FindNaN(DNPDRP_mmse));
+DNPDRP_mmse = RemoveNaN(DNPDRP_mmse);
+
 DNPDR_mmse_items = "MMSE score";
 
-% KVHQ list and labels
-DNPDRP_kvhq = DNPDRP(:, 81:100);
-DNPDRP_kvhq1 = DNPDRP_kvhq(:, 1:10); DNPDRP_kvhq2 = DNPDRP_kvhq(:, 11:20);
+%% KVHQ
+% (subtotal 22 variables) KVHQ_year, KVHQ_month, KVHQ_part1 x 10, KVHQ_part2 x 10
+DNPDRP_kvhq = table2array(DNPDRP(:, 79:100));
+fprintf("Loaded KVHQ scores, %d missing values\n", sum(FindNaN(DNPDRP_kvhq)));
+P_KVHQ_year = DNPDRP_kvhq(:, 1) + DNPDRP_kvhq(:, 2)/12;
+P_KVHQ_duration = P_KVHQ_year - P_Onset_year;
+
+P_KVHQ_duration = P_KVHQ_duration(~FindNaN(DNPDRP_kvhq));
+DNPDRP_kvhq = RemoveNaN(DNPDRP_kvhq);
+DNPDRP_kvhq1 = DNPDRP_kvhq(:, 3:12); DNPDRP_kvhq2 = DNPDRP_kvhq(:, 13:22);
+
 DNPDR_kvhq1_items = ["빛 번짐", "글자 안 보임", "직선이 곡선으로", "야간 시력 문제", "헤드라이트 반짝", "빠른 움직임 어려움", ...
 "깊이 인식 어려움", "채도 구분 어려움", "배경 위 글자", "조명 변화 글자"];
 DNPDR_kvhq2_items = ["없는 사람이 보임", "시야 가장자리", "무언가 지나감", "그림자 형태", "다른 것으로 착각", "실제로 없는 물체", ...
 "실제가 아닌 소리", "실제가 아닌 촉감", "실제가 아닌 냄새", "실제가 아닌 맛"];
 
-% PDSS list and labels
-DNPDRP_pdss = DNPDRP(:, 103:117);
+%% PDSS
+% (subtotal 17 variables) PDSS_year, PDSS_month, PDSS_score x 15
+DNPDRP_pdss = table2array(DNPDRP(:, 101:117));
+fprintf("Loaded PDSS scores, %d missing values\n", sum(FindNaN(DNPDRP_pdss)));
+P_PDSS_year = DNPDRP_pdss(:, 1) + DNPDRP_pdss(:, 2)/12;
+P_PDSS_duration = P_PDSS_year - P_Onset_year;
+
 DNPDR_pdss_items = ["수면의 질", "입면 어려움", "수면 유지 어려움", "팔다리 불안", "팔다리 탈면", "이상한 꿈", "환청/환시", "야간뇨", ...
 "가위 눌림", "팔다리 통증", "팔다리 뭉침", "이상한 자세", "기상 시 떨림", "피곤함/졸림", "코골이 탈면"];
 
-DNPDRP_hue = DNPDRP(:, 120:121);
+%% Hue
+% (subtotal 4 variables) Hue_year, Hue_month, Hue_Rt, Hue_Lt
+DNPDRP_hue = table2array(DNPDRP(:, 118:121));
+fprintf("Loaded Hue scores, %d missing values\n", sum(FindNaN(DNPDRP_hue)));
+P_Hue_year = DNPDRP_hue(:, 1) + DNPDRP_hue(:, 2)/12;
+P_Hue_duration = P_Hue_year - P_Onset_year;
 
-% VOG list and labels
-DNPDRP_vog = DNPDRP(:, 124:135);
-DNPDRP_hsl = DNPDRP_vog(:, 1:4); DNPDRP_hsa = DNPDRP_vog(:, 5:8); DNPDRP_hpg = DNPDRP_vog(:, 9:12);
+%% VOG
+% (subtotal 14 variables) VOG_year, VOG_month, HS_Lat_OD_Rt, HS_Lat_OD_Lt, HS_Lat_OS_Rt, HS_Lat_OS_Lt, HS_Acc_OD_Rt, HS_Acc_OD_Lt, HS_Acc_OS_Rt, HS_Acc_OS_Lt, HP_Gain_OD_Rt, HP_Gain_OD_Lt, HP_Gain_OS_Rt, HP_Gain_OS_Lt
+DNPDRP_vog = table2array(DNPDRP(:, 122:135));
+fprintf("Loaded VOG scores, %d missing values\n", sum(FindNaN(DNPDRP_vog)));
+DNPDRP_hsl = DNPDRP_vog(:, 3:6); DNPDRP_hsa = DNPDRP_vog(:, 7:10); DNPDRP_hpg = DNPDRP_vog(:, 11:14);
+P_VOG_year = DNPDRP_vog(:, 1) + DNPDRP_vog(:, 2)/12;
+P_VOG_duration = P_VOG_year - P_Onset_year;
+
 DNPDR_vog_items = ["HS Latency (OD, Rt)", "HS Latency (OD, Lt)", "HS Latency (OS, Rt)", "HS Latency (OS, Lt)", "HS Accuracy (OD, Rt)", ...
 "HS Accuracy (OD, Lt)", "HS Accuracy (OS, Rt)", "HS Accuracy (OS, Lt)", "HP Gain (OD, Rt)", "HP Gain (OD, Lt)", "HP Gain (OS, Rt)", "HP Gain (OS, Lt)"];
 
-% OCT list and labels
-DNPDRP_oct = DNPDRP(:, 138:end);
-DNPDRP_axl_od = DNPDRP_oct(:, 1);
-DNPDRP_wrt_od = DNPDRP_oct(:, 3:11); DNPDRP_rnfl_od = DNPDRP_oct(:, 12:20); DNPDRP_gcl_od = DNPDRP_oct(:, 21:29); DNPDRP_ipl_od = DNPDRP_oct(:, 30:38);
-DNPDRP_axl_os = DNPDRP_oct(:, 2);
-DNPDRP_wrt_os = DNPDRP_oct(:, 39:47); DNPDRP_rnfl_os = DNPDRP_oct(:, 48:56); DNPDRP_gcl_os = DNPDRP_oct(:, 57:65); DNPDRP_ipl_os = DNPDRP_oct(:, 66:74);
+%% OCT
+% (subtotal 76 variables) OCT_year, OCT_month, OD_AXL, OS_AXL, OD_WRT x9, OD_RNFL x9, OD_GCL x9, OD_IPL x9, OS_WRT x9, OS_RNFL x9, OS_GCL x9, OS_IPL x9
+DNPDRP_oct = table2array(DNPDRP(:, 136:211));
+fprintf("Loaded OCT scores, %d missing values\n", sum(FindNaN(DNPDRP_oct)));
+DNPDRP_axl_od = DNPDRP_oct(:, 3);
+DNPDRP_wrt_od = DNPDRP_oct(:, 5:13); DNPDRP_rnfl_od = DNPDRP_oct(:, 14:22); DNPDRP_gcl_od = DNPDRP_oct(:, 23:31); DNPDRP_ipl_od = DNPDRP_oct(:, 32:40);
+DNPDRP_axl_os = DNPDRP_oct(:, 4);
+DNPDRP_wrt_os = DNPDRP_oct(:, 41:49); DNPDRP_rnfl_os = DNPDRP_oct(:, 50:58); DNPDRP_gcl_os = DNPDRP_oct(:, 59:67); DNPDRP_ipl_os = DNPDRP_oct(:, 68:76);
+P_OCT_year = DNPDRP_oct(:, 1) + DNPDRP_oct(:, 2)/12;
+P_OCT_duration = P_OCT_year - P_Onset_year;
+
 DNPDR_eye_items = ["Axis length (OD)", "Axis length (OS)"];
 DNPDR_oct_items = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-% Control info
-% PID, Sex, Age, YOB, UPDRS_year, UPDRS_month, MMSE_year, MMSE_month, KVHQ_year, KVHQ_month, PDSS_year, PDSS_month, Hue_year, Hue_month
-DNPDRC_info = DNPDRC(:, [1:6, 73:74, 76:77, 98:99, 115:116]);
+%% VOG, OCT data summary
+fprintf("\n== VOG, OCT data summary for DNPD patients ==\n");
+fprintf("VOG (+), OCT (+) : %d\n", sum(~FindNaN(DNPDRP_vog) .* ~FindNaN(DNPDRP_oct)));
+fprintf("VOG (-), OCT (+) : %d\n", sum(FindNaN(DNPDRP_vog) .* ~FindNaN(DNPDRP_oct)));
+fprintf("VOG (+), OCT (-) : %d\n", sum(~FindNaN(DNPDRP_vog) .* FindNaN(DNPDRP_oct)));
+fprintf("VOG (-), OCT (-) : %d\n", sum(FindNaN(DNPDRP_vog) .* FindNaN(DNPDRP_oct)));
 
-DNPDRC_updrs = DNPDRC(:, 7:72);
-DNPDRC_u1 = DNPDRC_updrs(:, 1:13); DNPDRC_u2 = DNPDRC_updrs(:, 14:26); DNPDRC_u3 = DNPDRC_updrs(:, 27:59); DNPDRC_u4 = DNPDRC_updrs(:, 60:65); 
-DNPDRC_hy = DNPDRC_updrs(:, 66);
-DNPDRC_mmse = DNPDRC(:, 75);
-DNPDRC_kvhq = DNPDRC(:, 78:97);
-DNPDRC_kvhq1 = DNPDRC_kvhq(:, 1:10); DNPDRC_kvhq2 = DNPDRC_kvhq(:, 11:20);
-DNPDRC_pdss = DNPDRC(:, 100:114);
-DNPDRC_hue = DNPDRC(:, 117:118);
+%% Control info
+% (subtotal 4 variables) Serial, Sex, Age, YOB
+DNPDRC_info = table2array(DNPDRC(:, 2:4)); % Leave Serial out
+fprintf("\n=== Control Group (n=%d) ===\n", size(DNPDRC_info, 1));
+C_sex = DNPDRC_info(:, 1); C_age = DNPDRC_info(:, 2);
 
-%% Data summary
-UPDRS_isnanP = ~isnan(DNPDRP_info(:, 8)); MMSE_isnanP = ~isnan(DNPDRP_info(:, 10)); KVHQ_isnanP = ~isnan(DNPDRP_info(:, 12)); PDSS_isnanP = ~isnan(DNPDRP_info(:, 14));
-Hue_isnanP = ~isnan(DNPDRP_info(:, 16)); VOG_isnanP = ~isnan(DNPDRP_info(:, 18)); OCT_isnanP = ~isnan(DNPDRP_info(:, 20));
-UPDRS_isnanC = ~isnan(DNPDRC_info(:, 5)); MMSE_isnanC = ~isnan(DNPDRC_info(:, 7)); KVHQ_isnanC = ~isnan(DNPDRC_info(:, 9));
-PDSS_isnanC = ~isnan(DNPDRC_info(:, 11)); Hue_isnanC = ~isnan(DNPDRC_info(:, 13));
-fprintf("== Data summary for PD patients ==\n");
-fprintf("VOG (+), OCT (+) : %d\n", sum(VOG_isnanP .* OCT_isnanP));
-fprintf("VOG (-), OCT (+) : %d\n", sum(~VOG_isnanP .* OCT_isnanP));
-fprintf("VOG (+), OCT (-) : %d\n", sum(VOG_isnanP .* ~OCT_isnanP));
-fprintf("VOG (-), OCT (-) : %d\n", sum(~VOG_isnanP .* ~OCT_isnanP));
+%% UPDRS
+% (subtotal 68 variables) UPDRS_year, UPDRS_month, UPDRS_part1 x 13, UPDRS_part2 x 13, UPDRS_part3 x 33, UPDRS_part4 x 6, HY
+DNPDRC_updrs = table2array(DNPDRC(:, 5:72));
+DNPDRC_u1 = DNPDRC_updrs(:, 3:15);
+fprintf("Loaded UPDRS part 1 scores, %d missing values\n", sum(FindNaN(DNPDRC_u1)));
+DNPDRC_u2 = DNPDRC_updrs(:, 16:28);
+fprintf("Loaded UPDRS part 2 scores, %d missing values\n", sum(FindNaN(DNPDRC_u2)));
+DNPDRC_u3 = DNPDRC_updrs(:, 29:61);
+fprintf("Loaded UPDRS part 3 scores, %d missing values\n", sum(FindNaN(DNPDRC_u3)));
+
+DNPDRC_u1 = RemoveNaN(DNPDRC_u1);
+DNPDRC_u2 = RemoveNaN(DNPDRC_u2);
+DNPDRC_u3 = RemoveNaN(DNPDRC_u3);
+
+DNPDRC_hy = DNPDRC_updrs(:, 68);
+fprintf("Loaded H-Y scores, %d missing values\n", sum(FindNaN(DNPDRC_hy)));
+
+DNPDRC_hy = RemoveNaN(DNPDRC_hy);
+
+%% MMSE
+% (subtotal 3 variables) MMSE_year, MMSE_month, MMSE_score
+DNPDRC_mmse = table2array(DNPDRC(:, 73:75));
+fprintf("Loaded MMSE scores, %d missing values\n", sum(FindNaN(DNPDRC_mmse)));
+
+DNPDRC_mmse = RemoveNaN(DNPDRC_mmse);
+
+%% KVHQ
+% (subtotal 22 variables) KVHQ_year, KVHQ_month, KVHQ_part1 x 10, KVHQ_part2 x 10
+DNPDRC_kvhq = table2array(DNPDRC(:, 76:97));
+fprintf("Loaded KVHQ scores, %d missing values\n", sum(FindNaN(DNPDRC_kvhq)));
+
+DNPDRC_kvhq = RemoveNaN(DNPDRC_kvhq);
+DNPDRC_kvhq1 = DNPDRC_kvhq(:, 3:12); DNPDRC_kvhq2 = DNPDRC_kvhq(:, 13:22);
+
+%% PDSS
+% (subtotal 17 variables) PDSS_year, PDSS_month, PDSS_score x 15
+DNPDRC_pdss = table2array(DNPDRC(:, 98:114));
+fprintf("Loaded PDSS scores, %d missing values\n", sum(FindNaN(DNPDRC_pdss)));
+
+%% Hue
+% (subtotal 4 variables) Hue_year, Hue_month, Hue_Rt, Hue_Lt
+DNPDRC_hue = table2array(DNPDRC(:, 115:118));
+fprintf("Loaded Hue scores, %d missing values\n", sum(FindNaN(DNPDRC_hue)));
 
 %% Baseline characteristics
-fprintf("\n== Baseline characteristics for PD patients ==\n");
-VariableP = ["Sex"; "Age"; "Duration"; "UPDRS_part1"; "UPDRS_part2"; "UPDRS_part3"; "UPDRS_part4"; "MMSE_score"; "KVHQ_part1"; "KVHQ_part2"; "PDSS_score"; "Hue_score"];
-tableHeaderP = table(VariableP);
-tableDataP = vertcat(descvar(DNPDRP_info(:, 2), "table"), descvar(DNPDRP_info(:, 3), "table"), descvar(DNPDRP_duration, "table"), ...
-            descvar(sum(DNPDRP_u1, 2), "table"), descvar(sum(DNPDRP_u2, 2), "table"), descvar(sum(DNPDRP_u3, 2), "table"), descvar(sum(DNPDRP_u4, 2), "table"), ...
-            descvar(DNPDRP_mmse, "table"), descvar(sum(DNPDRP_kvhq1, 2), "table"), descvar(sum(DNPDRP_kvhq2, 2), "table"), ...
-            descvar(sum(DNPDRP_pdss, 2), "table"), descvar(sum(DNPDRP_hue, 2), "table"));
-tableDataP = horzcat(tableHeaderP, tableDataP);
-disp(tableDataP);
+fprintf("\n== Baseline characteristics ==\n");
+% N
+fprintf("Patient N = %d\n", size(DNPDRP_info, 1));
+fprintf("Control N = %d\n", size(DNPDRC_info, 1));
+% Age
+fprintf("Patient age = %.1f ± %.1f\n", mean(P_age), std(P_age));
+fprintf("Control age = %.1f ± %.1f\n", mean(C_age), std(C_age));
+% Sex
+fprintf("Patient sex (M/F) = %d/%d\n", sum(P_sex==1, "all"), sum(P_sex==2, "all"));
+fprintf("Control sex (M/F) = %d/%d\n", sum(C_sex==1, "all"), sum(C_sex==2, "all"));
+% UPDRS
+fprintf("Patient u1 = %.1f ± %.1f, u2 = %.1f ± %.1f, u3 = %.1f ± %.1f\n", mean(sum(DNPDRP_u1, 2)), std(sum(DNPDRP_u1, 2)), mean(sum(DNPDRP_u2, 2)), std(sum(DNPDRP_u2, 2)), mean(sum(DNPDRP_u3, 2)), std(sum(DNPDRP_u3, 2)));
+fprintf("Control u1 = %.1f ± %.1f, u2 = %.1f ± %.1f, u3 = %.1f ± %.1f\n", mean(sum(DNPDRC_u1, 2)), std(sum(DNPDRC_u1, 2)), mean(sum(DNPDRC_u2, 2)), std(sum(DNPDRC_u2, 2)), mean(sum(DNPDRC_u3, 2)), std(sum(DNPDRC_u3, 2)));
+% H-Y
+fprintf("Patient H-Y score = %.1f ± %.1f\n", mean(DNPDRP_hy), std(DNPDRP_hy));
+fprintf("Control H-Y score = %.1f ± %.1f\n", mean(DNPDRC_hy), std(DNPDRC_hy));
+% MMSE
+fprintf("Patient MMSE score = %.1f ± %.1f\n", mean(DNPDRP_mmse(:, 3)), std(DNPDRP_mmse(:, 3)));
+fprintf("Control MMSE score = %.1f ± %.1f\n", mean(DNPDRC_mmse(:, 3)), std(DNPDRC_mmse(:, 3)));
 
-VariableC = ["Sex"; "Age"; "UPDRS_part1"; "UPDRS_part2"; "UPDRS_part3"; "UPDRS_part4"; "MMSE_score"; "KVHQ_part1"; "KVHQ_part2"; "PDSS_score"; "Hue_score"];
-tableHeaderC = table(VariableC);
-tableDataC = vertcat(descvar(DNPDRC_info(:, 2), "table"), descvar(DNPDRC_info(:, 3), "table"), ...
-            descvar(sum(DNPDRC_u1, 2), "table"), descvar(sum(DNPDRC_u2, 2), "table"), descvar(sum(DNPDRC_u3, 2), "table"), descvar(sum(DNPDRC_u4, 2), "table"), ...
-            descvar(DNPDRC_mmse, "table"), descvar(sum(DNPDRC_kvhq1, 2), "table"), descvar(sum(DNPDRC_kvhq2, 2), "table"), ...
-            descvar(sum(DNPDRC_pdss, 2), "table"), descvar(sum(DNPDRC_hue, 2), "table"));
-tableDataC = horzcat(tableHeaderC, tableDataC);
-disp(tableDataC);
+%% Results - KVHQ
+% K-VHQ Symptom presence percentage simple bar graph
+DNPDR_SimpleBar(DNPDRP_kvhq1 ~= 0, DNPDR_kvhq1_items, "Symptom presence %", strcat("Patient K-VHQ part 1 (n=", num2str(size(DNPDRP_kvhq1, 1)), ")"));
+DNPDR_SimpleBar(DNPDRP_kvhq2 ~= 0, DNPDR_kvhq2_items, "Symptom presence %", strcat("Patient K-VHQ part 2 (n=", num2str(size(DNPDRP_kvhq2, 1)), ")"));
+DNPDR_SimpleBar(DNPDRC_kvhq1 ~= 0, DNPDR_kvhq1_items, "Symptom presence %", strcat("Control K-VHQ part 1 (n=", num2str(size(DNPDRC_kvhq1, 1)), ")"));
+DNPDR_SimpleBar(DNPDRC_kvhq2 ~= 0, DNPDR_kvhq2_items, "Symptom presence %", strcat("Control K-VHQ part 2 (n=", num2str(size(DNPDRC_kvhq2, 1)), ")"));
 
-%% Data visualization
+%% Results - VOG
+
+%% Results - OCT
+
+
 
 % (Patient group) Plot bar chart for UPDRS part 1, 2, 3, H-Y score, MMSE score, KVHQ part 1, 2, PDSS score
-%DNPDR_PlotBar(DNPDRP_u1, "UPDRS part 1", DNPDR_u1_items);
+%DNPDR_PlotBar(DNPDRP_u1, "UPDRS part 1", DNPDR_u1_items);  
 %DNPDR_PlotBar(DNPDRP_u2, "UPDRS part 2", DNPDR_u2_items);
 %DNPDR_PlotBar(DNPDRP_u3, "UPDRS part 3", DNPDR_u3_items);
 %DNPDR_PlotBar(DNPDRP_hy, "H-Y score", DNPDR_hy_items);
