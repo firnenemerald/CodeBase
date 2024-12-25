@@ -215,11 +215,20 @@ fprintf("Patient MMSE score = %.1f ± %.1f\n", mean(DNPDRP_mmse(:, 3)), std(DNPD
 fprintf("Control MMSE score = %.1f ± %.1f\n", mean(DNPDRC_mmse(:, 3)), std(DNPDRC_mmse(:, 3)));
 
 %% Results - KVHQ
-% K-VHQ Symptom presence percentage simple bar graph
-DNPDR_SimpleBar(DNPDRP_kvhq1 ~= 0, DNPDR_kvhq1_items, "Symptom presence %", strcat("Patient K-VHQ part 1 (n=", num2str(size(DNPDRP_kvhq1, 1)), ")"));
-DNPDR_SimpleBar(DNPDRP_kvhq2 ~= 0, DNPDR_kvhq2_items, "Symptom presence %", strcat("Patient K-VHQ part 2 (n=", num2str(size(DNPDRP_kvhq2, 1)), ")"));
-DNPDR_SimpleBar(DNPDRC_kvhq1 ~= 0, DNPDR_kvhq1_items, "Symptom presence %", strcat("Control K-VHQ part 1 (n=", num2str(size(DNPDRC_kvhq1, 1)), ")"));
-DNPDR_SimpleBar(DNPDRC_kvhq2 ~= 0, DNPDR_kvhq2_items, "Symptom presence %", strcat("Control K-VHQ part 2 (n=", num2str(size(DNPDRC_kvhq2, 1)), ")"));
+% K-VHQ symptom presence percentage simple bar graph
+P_kvhq1_ratio = sum(DNPDRP_kvhq1 ~= 0, 1)/size(DNPDRP_kvhq1, 1);
+P_kvhq2_ratio = sum(DNPDRP_kvhq2 ~= 0, 1)/size(DNPDRP_kvhq2, 1);
+C_kvhq1_ratio = sum(DNPDRC_kvhq1 ~= 0, 1)/size(DNPDRC_kvhq1, 1);
+C_kvhq2_ratio = sum(DNPDRC_kvhq2 ~= 0, 1)/size(DNPDRC_kvhq2, 1);
+DNPDR_SimplePercentBar(P_kvhq1_ratio*100, DNPDR_kvhq1_items, "Symptom presence %", strcat("Patient K-VHQ part 1 (n=", num2str(size(DNPDRP_kvhq1, 1)), ")"));
+DNPDR_SimplePercentBar(P_kvhq2_ratio*100, DNPDR_kvhq2_items, "Symptom presence %", strcat("Patient K-VHQ part 2 (n=", num2str(size(DNPDRP_kvhq2, 1)), ")"));
+DNPDR_SimplePercentBar(C_kvhq1_ratio*100, DNPDR_kvhq1_items, "Symptom presence %", strcat("Control K-VHQ part 1 (n=", num2str(size(DNPDRC_kvhq1, 1)), ")"));
+DNPDR_SimplePercentBar(C_kvhq2_ratio*100, DNPDR_kvhq2_items, "Symptom presence %", strcat("Control K-VHQ part 2 (n=", num2str(size(DNPDRC_kvhq2, 1)), ")"));
+% K-VHQ symptom presence percentage difference ratio bar graph
+PC_kvhq1_diff = (P_kvhq1_ratio - C_kvhq1_ratio)./(C_kvhq1_ratio + 1);
+PC_kvhq2_diff = (P_kvhq2_ratio - C_kvhq2_ratio)./(C_kvhq2_ratio + 1);
+DNPDR_SimpleValueBar(PC_kvhq1_diff, DNPDR_kvhq1_items, "(Patient - Control) / Control value", "K-VHQ part 1 presence ratio difference");
+DNPDR_SimpleValueBar(PC_kvhq2_diff, DNPDR_kvhq2_items, "(Patient - Control) / Control value", "K-VHQ part 2 presence ratio difference");
 
 %% Results - VOG
 
