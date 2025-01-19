@@ -72,8 +72,8 @@ DNPDRP_mmse = table2array(DNPDRP(:, 76:78));
 fprintf("Loaded MMSE scores, %d missing values\n", sum(FindNaN(DNPDRP_mmse)));
 P_MMSE_year = DNPDRP_mmse(:, 1) + DNPDRP_mmse(:, 2)/12;
 P_MMSE_duration = P_MMSE_year - P_Onset_year;
-
 P_MMSE_duration = P_MMSE_duration(~FindNaN(DNPDRP_mmse));
+
 DNPDRP_mmse = RemoveNaN(DNPDRP_mmse);
 
 DNPDR_mmse_items = "MMSE score";
@@ -85,8 +85,6 @@ fprintf("Loaded KVHQ scores, %d missing values\n", sum(FindNaN(DNPDRP_kvhq)));
 P_KVHQ_year = DNPDRP_kvhq(:, 1) + DNPDRP_kvhq(:, 2)/12;
 P_KVHQ_duration = P_KVHQ_year - P_Onset_year;
 
-P_KVHQ_duration = P_KVHQ_duration(~FindNaN(DNPDRP_kvhq));
-DNPDRP_kvhq = RemoveNaN(DNPDRP_kvhq);
 DNPDRP_kvhq1 = DNPDRP_kvhq(:, 3:12); DNPDRP_kvhq2 = DNPDRP_kvhq(:, 13:22);
 
 DNPDR_kvhq1_items = ["빛 번짐", "글자 안 보임", "직선이 곡선으로", "야간 시력 문제", "헤드라이트 반짝", "빠른 움직임 어려움", ...
@@ -100,6 +98,9 @@ DNPDRP_pdss = table2array(DNPDRP(:, 101:117));
 fprintf("Loaded PDSS scores, %d missing values\n", sum(FindNaN(DNPDRP_pdss)));
 P_PDSS_year = DNPDRP_pdss(:, 1) + DNPDRP_pdss(:, 2)/12;
 P_PDSS_duration = P_PDSS_year - P_Onset_year;
+P_PDSS_duration = P_PDSS_duration(~FindNaN(DNPDRP_pdss));
+
+DNPDRP_pdss = RemoveNaN(DNPDRP_pdss);
 
 DNPDR_pdss_items = ["수면의 질", "입면 어려움", "수면 유지 어려움", "팔다리 불안", "팔다리 탈면", "이상한 꿈", "환청/환시", "야간뇨", ...
 "가위 눌림", "팔다리 통증", "팔다리 뭉침", "이상한 자세", "기상 시 떨림", "피곤함/졸림", "코골이 탈면"];
@@ -110,14 +111,19 @@ DNPDRP_hue = table2array(DNPDRP(:, 118:121));
 fprintf("Loaded Hue scores, %d missing values\n", sum(FindNaN(DNPDRP_hue)));
 P_Hue_year = DNPDRP_hue(:, 1) + DNPDRP_hue(:, 2)/12;
 P_Hue_duration = P_Hue_year - P_Onset_year;
+P_Hue_duration = P_Hue_duration(~FindNaN(DNPDRP_hue));
+
+DNPDRP_hue = RemoveNaN(DNPDRP_hue);
 
 %% VOG
 % (subtotal 14 variables) VOG_year, VOG_month, HS_Lat_OD_Rt, HS_Lat_OD_Lt, HS_Lat_OS_Rt, HS_Lat_OS_Lt, HS_Acc_OD_Rt, HS_Acc_OD_Lt, HS_Acc_OS_Rt, HS_Acc_OS_Lt, HP_Gain_OD_Rt, HP_Gain_OD_Lt, HP_Gain_OS_Rt, HP_Gain_OS_Lt
 DNPDRP_vog = table2array(DNPDRP(:, 122:135));
 fprintf("Loaded VOG scores, %d missing values\n", sum(FindNaN(DNPDRP_vog)));
-DNPDRP_hsl = DNPDRP_vog(:, 3:6); DNPDRP_hsa = DNPDRP_vog(:, 7:10); DNPDRP_hpg = DNPDRP_vog(:, 11:14);
 P_VOG_year = DNPDRP_vog(:, 1) + DNPDRP_vog(:, 2)/12;
 P_VOG_duration = P_VOG_year - P_Onset_year;
+P_VOG_duration = P_VOG_duration(~FindNaN(DNPDRP_vog));
+
+DNPDRP_hsl = DNPDRP_vog(:, 3:6); DNPDRP_hsa = DNPDRP_vog(:, 7:10); DNPDRP_hpg = DNPDRP_vog(:, 11:14);
 
 DNPDR_vog_items = ["HS Latency (OD, Rt)", "HS Latency (OD, Lt)", "HS Latency (OS, Rt)", "HS Latency (OS, Lt)", "HS Accuracy (OD, Rt)", ...
 "HS Accuracy (OD, Lt)", "HS Accuracy (OS, Rt)", "HS Accuracy (OS, Lt)", "HP Gain (OD, Rt)", "HP Gain (OD, Lt)", "HP Gain (OS, Rt)", "HP Gain (OS, Lt)"];
@@ -126,22 +132,21 @@ DNPDR_vog_items = ["HS Latency (OD, Rt)", "HS Latency (OD, Lt)", "HS Latency (OS
 % (subtotal 76 variables) OCT_year, OCT_month, OD_AXL, OS_AXL, OD_WRT x9, OD_RNFL x9, OD_GCL x9, OD_IPL x9, OS_WRT x9, OS_RNFL x9, OS_GCL x9, OS_IPL x9
 DNPDRP_oct = table2array(DNPDRP(:, 136:211));
 fprintf("Loaded OCT scores, %d missing values\n", sum(FindNaN(DNPDRP_oct)));
-DNPDRP_axl_od = DNPDRP_oct(:, 3);
-DNPDRP_wrt_od = DNPDRP_oct(:, 5:13); DNPDRP_rnfl_od = DNPDRP_oct(:, 14:22); DNPDRP_gcl_od = DNPDRP_oct(:, 23:31); DNPDRP_ipl_od = DNPDRP_oct(:, 32:40);
-DNPDRP_axl_os = DNPDRP_oct(:, 4);
-DNPDRP_wrt_os = DNPDRP_oct(:, 41:49); DNPDRP_rnfl_os = DNPDRP_oct(:, 50:58); DNPDRP_gcl_os = DNPDRP_oct(:, 59:67); DNPDRP_ipl_os = DNPDRP_oct(:, 68:76);
 P_OCT_year = DNPDRP_oct(:, 1) + DNPDRP_oct(:, 2)/12;
 P_OCT_duration = P_OCT_year - P_Onset_year;
 
+DNPDRP_axl_od = DNPDRP_oct(:, 3); DNPDRP_axl_os = DNPDRP_oct(:, 4);
+DNPDRP_wrt_od = mean(DNPDRP_oct(:, 5:13), 2); 
+DNPDRP_rnfl_od = mean(DNPDRP_oct(:, 14:22), 2); 
+DNPDRP_gcl_od = mean(DNPDRP_oct(:, 23:31), 2); 
+DNPDRP_ipl_od = mean(DNPDRP_oct(:, 32:40), 2); 
+DNPDRP_wrt_os = mean(DNPDRP_oct(:, 41:49), 2); 
+DNPDRP_rnfl_os = mean(DNPDRP_oct(:, 50:58), 2); 
+DNPDRP_gcl_os = mean(DNPDRP_oct(:, 59:67), 2); 
+DNPDRP_ipl_os = mean(DNPDRP_oct(:, 68:76), 2);
+
 DNPDR_eye_items = ["Axis length (OD)", "Axis length (OS)"];
 DNPDR_oct_items = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
-%% VOG, OCT data summary
-fprintf("\n== VOG, OCT data summary for DNPD patients ==\n");
-fprintf("VOG (+), OCT (+) : %d\n", sum(~FindNaN(DNPDRP_vog) .* ~FindNaN(DNPDRP_oct)));
-fprintf("VOG (-), OCT (+) : %d\n", sum(FindNaN(DNPDRP_vog) .* ~FindNaN(DNPDRP_oct)));
-fprintf("VOG (+), OCT (-) : %d\n", sum(~FindNaN(DNPDRP_vog) .* FindNaN(DNPDRP_oct)));
-fprintf("VOG (-), OCT (-) : %d\n", sum(FindNaN(DNPDRP_vog) .* FindNaN(DNPDRP_oct)));
 
 %% Control info
 % (subtotal 4 variables) Serial, Sex, Age, YOB
@@ -216,25 +221,53 @@ fprintf("Control MMSE score = %.1f ± %.1f\n", mean(DNPDRC_mmse(:, 3)), std(DNPD
 
 %% Results - KVHQ
 % K-VHQ symptom presence percentage simple bar graph
-P_kvhq1_ratio = sum(DNPDRP_kvhq1 ~= 0, 1)/size(DNPDRP_kvhq1, 1);
-P_kvhq2_ratio = sum(DNPDRP_kvhq2 ~= 0, 1)/size(DNPDRP_kvhq2, 1);
-C_kvhq1_ratio = sum(DNPDRC_kvhq1 ~= 0, 1)/size(DNPDRC_kvhq1, 1);
-C_kvhq2_ratio = sum(DNPDRC_kvhq2 ~= 0, 1)/size(DNPDRC_kvhq2, 1);
-DNPDR_SimplePercentBar(P_kvhq1_ratio*100, DNPDR_kvhq1_items, "Symptom presence %", strcat("Patient K-VHQ part 1 (n=", num2str(size(DNPDRP_kvhq1, 1)), ")"));
-DNPDR_SimplePercentBar(P_kvhq2_ratio*100, DNPDR_kvhq2_items, "Symptom presence %", strcat("Patient K-VHQ part 2 (n=", num2str(size(DNPDRP_kvhq2, 1)), ")"));
-DNPDR_SimplePercentBar(C_kvhq1_ratio*100, DNPDR_kvhq1_items, "Symptom presence %", strcat("Control K-VHQ part 1 (n=", num2str(size(DNPDRC_kvhq1, 1)), ")"));
-DNPDR_SimplePercentBar(C_kvhq2_ratio*100, DNPDR_kvhq2_items, "Symptom presence %", strcat("Control K-VHQ part 2 (n=", num2str(size(DNPDRC_kvhq2, 1)), ")"));
-% K-VHQ symptom presence percentage difference ratio bar graph
-PC_kvhq1_diff = (P_kvhq1_ratio - C_kvhq1_ratio)./(C_kvhq1_ratio + 1);
-PC_kvhq2_diff = (P_kvhq2_ratio - C_kvhq2_ratio)./(C_kvhq2_ratio + 1);
-DNPDR_SimpleValueBar(PC_kvhq1_diff, DNPDR_kvhq1_items, "(Patient - Control) / Control value", "K-VHQ part 1 presence ratio difference");
-DNPDR_SimpleValueBar(PC_kvhq2_diff, DNPDR_kvhq2_items, "(Patient - Control) / Control value", "K-VHQ part 2 presence ratio difference");
+% P_kvhq1_ratio = sum(DNPDRP_kvhq1 ~= 0, 1)/size(DNPDRP_kvhq1, 1);
+% P_kvhq2_ratio = sum(DNPDRP_kvhq2 ~= 0, 1)/size(DNPDRP_kvhq2, 1);
+% C_kvhq1_ratio = sum(DNPDRC_kvhq1 ~= 0, 1)/size(DNPDRC_kvhq1, 1);
+% C_kvhq2_ratio = sum(DNPDRC_kvhq2 ~= 0, 1)/size(DNPDRC_kvhq2, 1);
+% DNPDR_SimplePercentBar(P_kvhq1_ratio*100, DNPDR_kvhq1_items, "Symptom presence %", strcat("Patient K-VHQ part 1 (n=", num2str(size(DNPDRP_kvhq1, 1)), ")"));
+% DNPDR_SimplePercentBar(P_kvhq2_ratio*100, DNPDR_kvhq2_items, "Symptom presence %", strcat("Patient K-VHQ part 2 (n=", num2str(size(DNPDRP_kvhq2, 1)), ")"));
+% DNPDR_SimplePercentBar(C_kvhq1_ratio*100, DNPDR_kvhq1_items, "Symptom presence %", strcat("Control K-VHQ part 1 (n=", num2str(size(DNPDRC_kvhq1, 1)), ")"));
+% DNPDR_SimplePercentBar(C_kvhq2_ratio*100, DNPDR_kvhq2_items, "Symptom presence %", strcat("Control K-VHQ part 2 (n=", num2str(size(DNPDRC_kvhq2, 1)), ")"));
+% % K-VHQ symptom presence percentage difference ratio bar graph
+% PC_kvhq1_diff = (P_kvhq1_ratio - C_kvhq1_ratio)./(C_kvhq1_ratio + 1);
+% PC_kvhq2_diff = (P_kvhq2_ratio - C_kvhq2_ratio)./(C_kvhq2_ratio + 1);
+% DNPDR_SimpleValueBar(PC_kvhq1_diff, DNPDR_kvhq1_items, "(Patient - Control) / Control value", "K-VHQ part 1 presence ratio difference");
+% DNPDR_SimpleValueBar(PC_kvhq2_diff, DNPDR_kvhq2_items, "(Patient - Control) / Control value", "K-VHQ part 2 presence ratio difference");
+
+% Covariables - Age (age), Disease duration (dur), Axial length mean (axl)
+age = DNPDRP_info(:, 2); dur = DNPDRP_info(:, 6); axl = EagerMean(DNPDRP_axl_od, DNPDRP_axl_os);
 
 %% Results - VOG
+vog_hsl = mean(DNPDRP_hsl, 2);
+vog_hsa = mean(DNPDRP_hsa, 2);
+vog_hpg = mean(DNPDRP_hpg, 2);
+
+%% Results - KVHQ
+kvhq1 = DNPDRP_kvhq1; kvhq2 = DNPDRP_kvhq2;
 
 %% Results - OCT
+% Multiple linear regression (MLR)
+oct_wrt = EagerMean(DNPDRP_wrt_od, DNPDRP_wrt_os);
+oct_rnfl = EagerMean(DNPDRP_rnfl_od, DNPDRP_rnfl_os);
+oct_gcl = EagerMean(DNPDRP_gcl_od, DNPDRP_gcl_os);
+oct_ipl = EagerMean(DNPDRP_ipl_od, DNPDRP_ipl_os);
 
+wrt = DNPDR_MLR(oct_wrt, ["WRT(um)"], age, dur, axl, false);
+rnfl = DNPDR_MLR(oct_rnfl, ["RNFL(um)"], age, dur, axl, false);
+gcl = DNPDR_MLR(oct_gcl, ["GCL(um)"], age, dur, axl, false);
+ipl = DNPDR_MLR(oct_ipl, ["IPL(um)"], age, dur, axl, false);
 
+%% Results - KVHQ score vs VOG
+% DNPDR_Corr(kvhq1, DNPDR_kvhq1_items, [vog_hsl, vog_hsa, vog_hpg], ["HS Latency", "HS Accuracy", "HP Gain"], true)
+
+%% Results - KVHQ score vs OCT
+% DNPDR_Corr(kvhq1, DNPDR_kvhq1_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
+% DNPDR_Corr(kvhq2, DNPDR_kvhq2_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
+
+%% Results - KVHQ positivity vs OCT
+% DNPDR_Cohen(kvhq1, DNPDR_kvhq1_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
+% DNPDR_Cohen(kvhq2, DNPDR_kvhq2_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
 
 % (Patient group) Plot bar chart for UPDRS part 1, 2, 3, H-Y score, MMSE score, KVHQ part 1, 2, PDSS score
 %DNPDR_PlotBar(DNPDRP_u1, "UPDRS part 1", DNPDR_u1_items);  
