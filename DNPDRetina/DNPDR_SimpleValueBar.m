@@ -18,7 +18,7 @@ function DNPDR_SimpleValueBar(values, labels, ylabelText, titleText)
     
     % Color bars based on their value
     barColors = repmat([0.5, 0.5, 0.5], n, 1); % Default color is gray
-    barColors(values >= 0.05, :) = repmat([1, 0, 0], sum(values >= 0.05), 1); % Red for values >= 0.05
+    barColors(values >= 0.1, :) = repmat([1, 0, 0], sum(values >= 0.1), 1); % Red for values >= 0.1
     hold on
     for i = 1:n
         bar(i, values(i), 'FaceColor', barColors(i, :));
@@ -31,7 +31,7 @@ function DNPDR_SimpleValueBar(values, labels, ylabelText, titleText)
     xlim([0.5, n + 0.5]);
 
     % Add a horizontal reference line at y = 0.05
-    yline(0.05, 'r--');
+    yline(0.1, 'r--');
 
     % Add labels and title
     ylabel(ylabelText);

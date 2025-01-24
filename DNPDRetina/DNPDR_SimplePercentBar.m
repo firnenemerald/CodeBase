@@ -1,9 +1,9 @@
-function DNPDR_SimplePercentBar(percentage, labels, ylabelText, titleText)
+function DNPDR_SimplePercentBar(percentage, xlabelText, ylabelText, titleText)
     % Function for plotting and saving simple percent bar graphs
     
     % Check if the number of labels matches the number of values in percentage
     [~, n] = size(percentage);
-    if length(labels) ~= n
+    if length(xlabelText) ~= n
         error('Number of labels must match the number of columns in the percentage array');
     end
 
@@ -25,7 +25,7 @@ function DNPDR_SimplePercentBar(percentage, labels, ylabelText, titleText)
     end
     
     % Set the x-axis labels
-    set(gca, 'XTickLabel', labels);
+    set(gca, 'XTickLabel', xlabelText);
     
     % Set the x-axis limits
     xlim([0.5, n + 0.5]);
@@ -42,5 +42,5 @@ function DNPDR_SimplePercentBar(percentage, labels, ylabelText, titleText)
     saveas(gcf, fullfile(saveDir, strcat("sbar_", timestamp2, ".png")));
     
     % Close the figure window
-    close(gcf);
+    %close(gcf);
 end
