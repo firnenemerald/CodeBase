@@ -1,3 +1,9 @@
+%% Function for calculation and plotting of correlation
+
+
+% SPDX-FileCopyrightText: © 2025 Chanhee Jeong <chanheejeong@snu.ac.kr>
+% SPDX-License-Identifier: GPL-3.0-or-later
+
 function DNPDR_Corr(var1, var1name, var2, var2name, plotOn)
     if nargin < 5
         plotOn = false;

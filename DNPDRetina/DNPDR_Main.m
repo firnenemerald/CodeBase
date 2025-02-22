@@ -8,6 +8,9 @@ clear; close all;
 %% Import and preprocess data
 [DNPDRP, DNPDRC] = DNPDR_GetData(); % 78 DNPDRPs, 26 DNPDRCs
 
+% Exclude subjects with outliers
+DNPDRP([2, 71], :) = [];
+
 % Exclude subjects with extensive missing data
 DNPDRC([1, 14], :) = []; % 24 DNPDRCs
 
@@ -503,7 +506,7 @@ fprintf("Control MMSE score = %.1f ± %.1f\n", mean(C_m), std(C_m));
 % DNPDR_Corr(DNPDRP_k1, DNPDR_kvhq1_items, [DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], true)
 % DNPDR_Corr(DNPDRP_k2, DNPDR_kvhq2_items, [DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], true)
 
-%% Results - KVHQ positivity vs VOG
+%% Results - KVHQ positivity vs VOG (Cohen's d)
 % DNPDR_Cohen(DNPDRP_k1_presence, DNPDR_kvhq1_items, [DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], true)
 % DNPDR_Cohen(DNPDRP_k2_presence, DNPDR_kvhq2_items, [DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], true)
 
@@ -511,11 +514,34 @@ fprintf("Control MMSE score = %.1f ± %.1f\n", mean(C_m), std(C_m));
 % DNPDR_Corr(DNPDRP_k1, DNPDR_kvhq1_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
 % DNPDR_Corr(DNPDRP_k2, DNPDR_kvhq2_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
 
-%% Results - KVHQ positivity vs OCT
+%% Results - KVHQ positivity vs OCT (Cohen's d)
 % DNPDR_Cohen(DNPDRP_k1, DNPDR_kvhq1_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
 % DNPDR_Cohen(DNPDRP_k2, DNPDR_kvhq2_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
 
-%% Restuls - VOG vs OCT
+%% Results - KVHQ positivity vs OCT
+% DNPDR_LogicalBox(DNPDRP_k1, DNPDR_kvhq1_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
+% DNPDR_LogicalBox2(DNPDRP_k1, DNPDR_kvhq1_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
+% DNPDR_LogicalBox2(DNPDRP_k2, DNPDR_kvhq2_items, [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true)
+% data1 = DNPDRP_k1(:, 7);
+% data2 = rnfl;
+
+% % Check if var1 and var2 have the same number of rows
+% if size(data1, 1) ~= size(data2, 1)
+%     error('var1 and var2 must have the same number of rows');
+% end
+
+% % Remove rows with NaN values in either var1 or var2
+% rowsWithNaN = any(isnan(data1), 2) | any(isnan(data2), 2);
+% data1(rowsWithNaN, :) = [];
+% data2(rowsWithNaN, :) = [];
+
+% data1 = data1 ~= 0;
+% nogroup = data2(~data1);
+% yesgroup = data2(~~data1);
+
+% PlotCustomBar(nogroup, yesgroup, 'XLabel', '깊이 인식 어려움', 'YLabel', '', 'Title', 'RNFL', 'Group1', 'Sx (-)', 'Group2', 'Sx (+)')
+
+%% Results - VOG vs OCT
 % DNPDR_Corr([DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true);
 
 %% Results - u1 vs OCT
@@ -601,6 +627,36 @@ var1name = [ ...
     "Light headedness"
     "Fatigue"
 ];
+
+var2name = [
+    "빛 번짐"
+    "글자 안 보임"
+    "직선이 곡선으로"
+    "야간 시력 문제"
+    "헤드라이트 반짝"
+    "빠른 움직임 어려움"
+    "깊이 인식 어려움"
+    "채도 구분 어려움"
+    "배경 위 글자"
+    "조명 변화 글자"
+];
+
+% 2) Call your correlation function
+%    (set plotOn = true if you want the imagesc and scatter plots)
+
+% DNPDR_Corr(var1, var1name, var2, var2name, true);
+
+%% Results - u2 vs khhq part 1
+
+% --- UPDRS Part 2 data (N x 13) ---
+var1 = DNPDRP_u2;  % numeric
+
+% --- kvhq Part 1 presence (N x 10) ---
+%     logical array -> convert to double if needed
+var2 = double(DNPDRP_k1_presence);  % or you can leave it as logical
+
+% --- Labels ---
+var1name = DNPDR_u2_items';
 
 var2name = [
     "빛 번짐"
