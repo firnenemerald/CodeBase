@@ -1,5 +1,19 @@
 %% Function for calculation and plotting of correlation
-
+% This function calculates the correlation coefficients and p-values between
+% each pair of columns from two input matrices (var1 and var2). It also
+% plots the correlation matrix and scatter plots for significant pairs if
+% the plotOn flag is set to true.
+%
+% Example usage:
+% var1 = rand(100, 3); % 100 samples, 3 variables
+% var2 = rand(100, 2); % 100 samples, 2 variables
+% var1name = {'Var1_1', 'Var1_2', 'Var1_3'};
+% var2name = {'Var2_1', 'Var2_2'};
+% DNPDR_Corr(var1, var1name, var2, var2name, true);
+%
+% This will calculate the correlation between each pair of columns from var1
+% and var2, and plot the correlation matrix and scatter plots for significant
+% correlations.
 
 % SPDX-FileCopyrightText: © 2025 Chanhee Jeong <chanheejeong@snu.ac.kr>
 % SPDX-License-Identifier: GPL-3.0-or-later
@@ -81,8 +95,8 @@ function DNPDR_Corr(var1, var1name, var2, var2name, plotOn)
                     scatter(var1(:, i), var2(:, j), 'bo', 'filled');
                     title(sprintf('%s vs %s', var1name{i}, var2name{j}));
                     subtitle(strcat("N = ", num2str(size(var1, 1))));
-                    xlabel(var1name{i});
-                    ylabel(var2name{j});
+                    xlabel(var1name{i}, "Interpreter", "none");
+                    ylabel(var2name{j}, "Interpreter", "none");
                     % Add linear regression line
                     hold on;
                     coeffs = polyfit(var1(:, i), var2(:, j), 1);

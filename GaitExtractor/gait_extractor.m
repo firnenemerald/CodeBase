@@ -8,7 +8,7 @@ clear, close all
 % load('C:\Users\neosj\Dropbox\MATLAB\ODPCC\color_setting\color_set.mat')
 % 6.3853  21.31017406 48377966
 
-sessionFolder = {'C:\Users\chanh\Downloads\Test'};
+sessionFolder = {'C:\Users\chanh\Downloads\GaitomeRBD_data\addendum'};
 
 cd(char(sessionFolder))
 list = dir;
@@ -271,4 +271,4 @@ for session = 3:length(list)
 end
 
 PDtdat = [tdata tdatat tdatap];
-
+FinalData = PDtdat(:, [1:10, 12:end-1]);

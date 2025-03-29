@@ -423,21 +423,78 @@ DNPDRP_oct = table2array(DNPDRP(:, 136:211));
 DNPDRP_oct_year = DNPDRP_oct(:, 1) + DNPDRP_oct(:, 2)/12;
 DNPDRP_oct_duration = DNPDRP_oct_year - DNPDRP_onset_year;
 
+% Axial length
 DNPDRP_axl_od = DNPDRP_oct(:, 3);
 DNPDRP_axl_os = DNPDRP_oct(:, 4);
 DNPDRP_axl_m = mean([DNPDRP_axl_od, DNPDRP_axl_os], 2);
+
+% WRT thickness
 DNPDRP_wrt_od = mean(DNPDRP_oct(:, 5:13), 2);
+DNPDRP_wrt_od_O = mean(DNPDRP_oct(:, 5:8), 2);
+DNPDRP_wrt_od_I = mean(DNPDRP_oct(:, 9:12), 2);
+DNPDRP_wrt_od_R = mean(DNPDRP_oct(:, 5:12), 2);
+DNPDRP_wrt_od_C = mean(DNPDRP_oct(:, 13), 2);
 DNPDRP_wrt_os = mean(DNPDRP_oct(:, 41:49), 2);
+DNPDRP_wrt_os_O = mean(DNPDRP_oct(:, 41:44), 2);
+DNPDRP_wrt_os_I = mean(DNPDRP_oct(:, 45:48), 2);
+DNPDRP_wrt_os_R = mean(DNPDRP_oct(:, 41:48), 2);
+DNPDRP_wrt_os_C = mean(DNPDRP_oct(:, 49), 2);
 DNPDRP_wrt_m = mean([DNPDRP_wrt_od, DNPDRP_wrt_os], 2);
+DNPDRP_wrt_m_O = mean([DNPDRP_wrt_od_O, DNPDRP_wrt_os_O], 2);
+DNPDRP_wrt_m_I = mean([DNPDRP_wrt_od_I, DNPDRP_wrt_os_I], 2);
+DNPDRP_wrt_m_R = mean([DNPDRP_wrt_od, DNPDRP_wrt_os], 2);
+DNPDRP_wrt_m_C = mean([DNPDRP_wrt_od_C, DNPDRP_wrt_os_C], 2);
+
+% RNFL thickness
 DNPDRP_rnfl_od = mean(DNPDRP_oct(:, 14:22), 2);
+DNPDRP_rnfl_od_O = mean(DNPDRP_oct(:, 14:17), 2);
+DNPDRP_rnfl_od_I = mean(DNPDRP_oct(:, 18:21), 2);
+DNPDRP_rnfl_od_R = mean(DNPDRP_oct(:, 14:21), 2);
+DNPDRP_rnfl_od_C = mean(DNPDRP_oct(:, 22), 2);
 DNPDRP_rnfl_os = mean(DNPDRP_oct(:, 50:58), 2);
+DNPDRP_rnfl_os_O = mean(DNPDRP_oct(:, 50:53), 2);
+DNPDRP_rnfl_os_I = mean(DNPDRP_oct(:, 54:57), 2);
+DNPDRP_rnfl_os_R = mean(DNPDRP_oct(:, 50:57), 2);
+DNPDRP_rnfl_os_C = mean(DNPDRP_oct(:, 58), 2);
 DNPDRP_rnfl_m = mean([DNPDRP_rnfl_od, DNPDRP_rnfl_os], 2);
+DNPDRP_rnfl_m_O = mean([DNPDRP_rnfl_od_O, DNPDRP_rnfl_os_O], 2);
+DNPDRP_rnfl_m_I = mean([DNPDRP_rnfl_od_I, DNPDRP_rnfl_os_I], 2);
+DNPDRP_rnfl_m_R = mean([DNPDRP_rnfl_od_R,  DNPDRP_rnfl_os_R], 2);
+DNPDRP_rnfl_m_C = mean([DNPDRP_rnfl_od_C, DNPDRP_rnfl_os_C], 2);
+
+% GCL thickness
 DNPDRP_gcl_od = mean(DNPDRP_oct(:, 23:31), 2);
+DNPDRP_gcl_od_O = mean(DNPDRP_oct(:, 23:26), 2);
+DNPDRP_gcl_od_I = mean(DNPDRP_oct(:, 27:30), 2);
+DNPDRP_gcl_od_R = mean(DNPDRP_oct(:, 23:30), 2);
+DNPDRP_gcl_od_C = mean(DNPDRP_oct(:, 31), 2);
 DNPDRP_gcl_os = mean(DNPDRP_oct(:, 59:67), 2);
+DNPDRP_gcl_os_O = mean(DNPDRP_oct(:, 59:62), 2);
+DNPDRP_gcl_os_I = mean(DNPDRP_oct(:, 63:66), 2);
+DNPDRP_gcl_os_R = mean(DNPDRP_oct(:, 59:66), 2);
+DNPDRP_gcl_os_C = mean(DNPDRP_oct(:, 67), 2);
 DNPDRP_gcl_m = mean([DNPDRP_gcl_od, DNPDRP_gcl_os], 2);
+DNPDRP_gcl_m_O = mean([DNPDRP_gcl_od_O, DNPDRP_gcl_os_O], 2);
+DNPDRP_gcl_m_I = mean([DNPDRP_gcl_od_I, DNPDRP_gcl_os_I], 2);
+DNPDRP_gcl_m_R = mean([DNPDRP_gcl_od_R, DNPDRP_gcl_os_R], 2);
+DNPDRP_gcl_m_C = mean([DNPDRP_gcl_od_C, DNPDRP_gcl_os_C], 2);
+
+% IPL thickness
 DNPDRP_ipl_od = mean(DNPDRP_oct(:, 32:40), 2);
+DNPDRP_ipl_od_O = mean(DNPDRP_oct(:, 32:35), 2);
+DNPDRP_ipl_od_I = mean(DNPDRP_oct(:, 36:39), 2);
+DNPDRP_ipl_od_R = mean(DNPDRP_oct(:, 32:39), 2);
+DNPDRP_ipl_od_C = mean(DNPDRP_oct(:, 40), 2);
 DNPDRP_ipl_os = mean(DNPDRP_oct(:, 68:76), 2);
+DNPDRP_ipl_os_O = mean(DNPDRP_oct(:, 68:71), 2);
+DNPDRP_ipl_os_I = mean(DNPDRP_oct(:, 72:75), 2);
+DNPDRP_ipl_os_R = mean(DNPDRP_oct(:, 68:75), 2);
+DNPDRP_ipl_os_C = mean(DNPDRP_oct(:, 76), 2);
 DNPDRP_ipl_m = mean([DNPDRP_ipl_od, DNPDRP_ipl_os], 2);
+DNPDRP_ipl_m_O = mean([DNPDRP_ipl_od_O, DNPDRP_ipl_os_O], 2);
+DNPDRP_ipl_m_I = mean([DNPDRP_ipl_od_I, DNPDRP_ipl_os_I], 2);
+DNPDRP_ipl_m_R = mean([DNPDRP_ipl_od_R, DNPDRP_ipl_os_R], 2);
+DNPDRP_ipl_m_C = mean([DNPDRP_ipl_od_C, DNPDRP_ipl_os_C], 2);
 
 % Console log
 fprintf("> Loaded Patient OCT scores, %d missing values\n", sum(FindNaN(DNPDRP_wrt_od)));
@@ -449,18 +506,34 @@ P_oct_duration = DNPDRP_oct_duration(~FindNaN(DNPDRP_wrt_od));
 P_axl_od = RemoveNaN(DNPDRP_axl_od);
 P_axl_os = RemoveNaN(DNPDRP_axl_os);
 P_axl_m = RemoveNaN(DNPDRP_axl_m);
+
 P_wrt_od = RemoveNaN(DNPDRP_wrt_od);
 P_wrt_os = RemoveNaN(DNPDRP_wrt_os);
 P_wrt_m = RemoveNaN(DNPDRP_wrt_m);
+P_wrt_m_O = RemoveNaN(DNPDRP_wrt_m_O);
+P_wrt_m_I = RemoveNaN(DNPDRP_wrt_m_I);
+P_wrt_m_R = RemoveNaN(DNPDRP_wrt_m_R);
+
 P_rnfl_od = RemoveNaN(DNPDRP_rnfl_od);
 P_rnfl_os = RemoveNaN(DNPDRP_rnfl_os);
 P_rnfl_m = RemoveNaN(DNPDRP_rnfl_m);
+P_rnfl_m_O = RemoveNaN(DNPDRP_rnfl_m_O);
+P_rnfl_m_I = RemoveNaN(DNPDRP_rnfl_m_I);
+P_rnfl_m_R = RemoveNaN(DNPDRP_rnfl_m_R);
+
 P_gcl_od = RemoveNaN(DNPDRP_gcl_od);
 P_gcl_os = RemoveNaN(DNPDRP_gcl_os);
 P_gcl_m = RemoveNaN(DNPDRP_gcl_m);
+P_gcl_m_O = RemoveNaN(DNPDRP_gcl_m_O);
+P_gcl_m_I = RemoveNaN(DNPDRP_gcl_m_I);
+P_gcl_m_R = RemoveNaN(DNPDRP_gcl_m_R);
+
 P_ipl_od = RemoveNaN(DNPDRP_ipl_od);
 P_ipl_os = RemoveNaN(DNPDRP_ipl_os);
 P_ipl_m = RemoveNaN(DNPDRP_ipl_m);
+P_ipl_m_O = RemoveNaN(DNPDRP_ipl_m_O);
+P_ipl_m_I = RemoveNaN(DNPDRP_ipl_m_I);
+P_ipl_m_R = RemoveNaN(DNPDRP_ipl_m_R);
 
 % OCT item strings
 DNPDR_eye_items = ["Axis length (OD)", "Axis length (OS)"];
@@ -476,10 +549,50 @@ oct_rnfl = EagerMean(DNPDRP_rnfl_od, DNPDRP_rnfl_os);
 oct_gcl = EagerMean(DNPDRP_gcl_od, DNPDRP_gcl_os);
 oct_ipl = EagerMean(DNPDRP_ipl_od, DNPDRP_ipl_os);
 
+oct_wrt_O = EagerMean(DNPDRP_wrt_od_O, DNPDRP_wrt_os_O);
+oct_rnfl_O = EagerMean(DNPDRP_rnfl_od_O, DNPDRP_rnfl_os_O);
+oct_gcl_O = EagerMean(DNPDRP_gcl_od_O, DNPDRP_gcl_os_O);
+oct_ipl_O = EagerMean(DNPDRP_ipl_od_O, DNPDRP_ipl_os_O);
+
+oct_wrt_I = EagerMean(DNPDRP_wrt_od_I, DNPDRP_wrt_os_I);
+oct_rnfl_I = EagerMean(DNPDRP_rnfl_od_I, DNPDRP_rnfl_os_I);
+oct_gcl_I = EagerMean(DNPDRP_gcl_od_I, DNPDRP_gcl_os_I);
+oct_ipl_I = EagerMean(DNPDRP_ipl_od_I, DNPDRP_ipl_os_I);
+
+oct_wrt_R = EagerMean(DNPDRP_wrt_od_R, DNPDRP_wrt_os_R);
+oct_rnfl_R = EagerMean(DNPDRP_rnfl_od_R, DNPDRP_rnfl_os_R);
+oct_gcl_R = EagerMean(DNPDRP_gcl_od_R, DNPDRP_gcl_os_R);
+oct_ipl_R = EagerMean(DNPDRP_ipl_od_R, DNPDRP_ipl_os_R);
+
+oct_wrt_C = EagerMean(DNPDRP_wrt_od_C, DNPDRP_wrt_os_C);
+oct_rnfl_C = EagerMean(DNPDRP_rnfl_od_C, DNPDRP_rnfl_os_C);
+oct_gcl_C = EagerMean(DNPDRP_gcl_od_C, DNPDRP_gcl_os_C);
+oct_ipl_C = EagerMean(DNPDRP_ipl_od_C, DNPDRP_ipl_os_C);
+
 wrt = DNPDR_MLR(oct_wrt, ["WRT(um)"], age, dur, axl, false);
 rnfl = DNPDR_MLR(oct_rnfl, ["RNFL(um)"], age, dur, axl, false);
 gcl = DNPDR_MLR(oct_gcl, ["GCL(um)"], age, dur, axl, false);
 ipl = DNPDR_MLR(oct_ipl, ["IPL(um)"], age, dur, axl, false);
+
+wrt_O = DNPDR_MLR(oct_wrt_O, ["WRT(um)"], age, dur, axl, false);
+rnfl_O = DNPDR_MLR(oct_rnfl_O, ["RNFL(um)"], age, dur, axl, false);
+gcl_O = DNPDR_MLR(oct_gcl_O, ["GCL(um)"], age, dur, axl, false);
+ipl_O = DNPDR_MLR(oct_ipl_O, ["IPL(um)"], age, dur, axl, false);
+
+wrt_I = DNPDR_MLR(oct_wrt_I, ["WRT(um)"], age, dur, axl, false);
+rnfl_I = DNPDR_MLR(oct_rnfl_I, ["RNFL(um)"], age, dur, axl, false);
+gcl_I = DNPDR_MLR(oct_gcl_I, ["GCL(um)"], age, dur, axl, false);
+ipl_I = DNPDR_MLR(oct_ipl_I, ["IPL(um)"], age, dur, axl, false);
+
+wrt_R = DNPDR_MLR(oct_wrt_R, ["WRT(um)"], age, dur, axl, false);
+rnfl_R = DNPDR_MLR(oct_rnfl_R, ["RNFL(um)"], age, dur, axl, false);
+gcl_R = DNPDR_MLR(oct_gcl_R, ["GCL(um)"], age, dur, axl, false);
+ipl_R = DNPDR_MLR(oct_ipl_R, ["IPL(um)"], age, dur, axl, false);
+
+wrt_C = DNPDR_MLR(oct_wrt_C, ["WRT(um)"], age, dur, axl, false);
+rnfl_C = DNPDR_MLR(oct_rnfl_C, ["RNFL(um)"], age, dur, axl, false);
+gcl_C = DNPDR_MLR(oct_gcl_C, ["GCL(um)"], age, dur, axl, false);
+ipl_C = DNPDR_MLR(oct_ipl_C, ["IPL(um)"], age, dur, axl, false);
 
 %% Results - Baseline characteristics
 fprintf("\n=== Baseline characteristics ===\n");
@@ -543,16 +656,15 @@ fprintf("Control MMSE score = %.1f ± %.1f\n", mean(C_m), std(C_m));
 
 %% Results - VOG vs OCT
 % DNPDR_Corr([DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], [wrt, rnfl, gcl, ipl], ["WRT", "RNFL", "GCL", "IPL"], true);
+% DNPDR_Corr([DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], [wrt_O, rnfl_O, gcl_O, ipl_O], ["WRT", "RNFL", "GCL", "IPL"], true);
+% DNPDR_Corr([DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], [wrt_I, rnfl_I, gcl_I, ipl_I], ["WRT", "RNFL", "GCL", "IPL"], true);
+% DNPDR_Corr([DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], [wrt_R, rnfl_R, gcl_R, ipl_R], ["WRT", "RNFL", "GCL", "IPL"], true);
+% DNPDR_Corr([DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m], ["HS Latency", "HS Accuracy", "HP Gain"], [wrt_C, rnfl_C, gcl_C, ipl_C], ["WRT", "RNFL", "GCL", "IPL"], true);
 
 %% Results - u1 vs OCT
 
 % % UPDRS Part 1 data: (N x 13)
 % var1 = DNPDRP_u1;  %  N patients, 13 items
-
-% % OCT data: (N x 4) 
-% %  [WRT, RNFL, GCL, IPL]
-% var2 = [DNPDRP_wrt_m, DNPDRP_rnfl_m, DNPDRP_gcl_m, DNPDRP_ipl_m];
-
 % % Labels for UPDRS Part 1
 % var1name = [
 %     "Cognitive impairment"
@@ -570,17 +682,44 @@ fprintf("Control MMSE score = %.1f ± %.1f\n", mean(C_m), std(C_m));
 %     "Fatigue"
 % ];
 
+% var1 = DNPDRP_u2;
+% var1name = [ ...
+%     "Speech", ...
+%     "Drooling", ...
+%     "Swallowing", ...
+%     "Eating", ...
+%     "Dressing", ...
+%     "Hygiene", ...
+%     "Handwriting", ...
+%     "Hobbies", ...
+%     "Turninbed", ...
+%     "Tremor", ...
+%     "Getoutofbed", ...
+%     "Balance", ...
+%     "Freezing", ...
+% ];
+
+% % OCT data: (N x 4) 
+% %  [WRT, RNFL, GCL, IPL]
+% % var2 = [DNPDRP_wrt_m, DNPDRP_rnfl_m, DNPDRP_gcl_m, DNPDRP_ipl_m];
+% % var2 = [DNPDRP_wrt_m_O, DNPDRP_rnfl_m_O, DNPDRP_gcl_m_O, DNPDRP_ipl_m_O];
+% % var2 = [DNPDRP_wrt_m_I, DNPDRP_rnfl_m_I, DNPDRP_gcl_m_I, DNPDRP_ipl_m_I];
+% % var2 = [DNPDRP_wrt_m_R, DNPDRP_rnfl_m_R, DNPDRP_gcl_m_R, DNPDRP_ipl_m_R];
+% var2 = [DNPDRP_wrt_m_C, DNPDRP_rnfl_m_C, DNPDRP_gcl_m_C, DNPDRP_ipl_m_C];
+
 % % Labels for OCT data
-% var2name = ["WRT","RNFL","GCL","IPL"];
+% % var2name = ["WRT","RNFL","GCL","IPL"];
+% % var2name = ["WRT_O","RNFL_O","GCL_O","IPL_O"];
+% % var2name = ["WRT_I","RNFL_I","GCL_I","IPL_I"];
+% % var2name = ["WRT_R","RNFL_R","GCL_R","IPL_R"];
+% var2name = ["WRT_C","RNFL_C","GCL_C","IPL_C"];
 
 % % Set plotOn = true to generate imagesc + scatter plots
 % DNPDR_Corr(var1, var1name, var2, var2name, true);
 
-%% Results - u1 vs VOG
+%% Results - u1, u2 vs VOG
 
-% var1 = DNPDRP_u1;  % where rows = patients, columns = 13 UPDRS Part 1 items
-% var2 = [DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m];
-
+% var1 = DNPDRP_u1;
 % var1name = [ ...
 %     "Cognitive impairment", ...
 %     "Hallucinations and psychosis", ...
@@ -597,10 +736,28 @@ fprintf("Control MMSE score = %.1f ± %.1f\n", mean(C_m), std(C_m));
 %     "Fatigue" ...
 % ];
 
-% var2name = ["HS Latency", "HS Accuracy", "HP Gain"];
+var1 = DNPDRP_u2;
+var1name = [ ...
+    "Speech", ...
+    "Drooling", ...
+    "Swallowing", ...
+    "Eating", ...
+    "Dressing", ...
+    "Hygiene", ...
+    "Handwriting", ...
+    "Hobbies", ...
+    "Turninbed", ...
+    "Tremor", ...
+    "Getoutofbed", ...
+    "Balance", ...
+    "Freezing", ...
+];
 
-% % Set plotOn = true to produce imagesc + scatter plots
-% DNPDR_Corr(var1, var1name, var2, var2name, true);
+var2 = [DNPDRP_hsl_m, DNPDRP_hsa_m, DNPDRP_hpg_m];
+var2name = ["HS Latency", "HS Accuracy", "HP Gain"];
+
+% Set plotOn = true to produce imagesc + scatter plots
+DNPDR_Corr(var1, var1name, var2, var2name, true);
 
 %% Results - u1 vs khhq part 1
 
@@ -674,4 +831,4 @@ var2name = [
 % 2) Call your correlation function
 %    (set plotOn = true if you want the imagesc and scatter plots)
 
-DNPDR_Corr(var1, var1name, var2, var2name, true);
+% DNPDR_Corr(var1, var1name, var2, var2name, true);
