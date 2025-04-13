@@ -48,6 +48,9 @@ function DNPDR_Corr(var1, var1name, var2, var2name, plotOn)
     for i = 1:numCols1
         for j = 1:numCols2
             [rho(i, j), pVal(i, j)] = corr(var1(:, i), var2(:, j));
+            if isnan(rho(i, j))
+                
+            end
         end
     end
 
