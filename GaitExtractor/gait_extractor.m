@@ -8,7 +8,7 @@ clear, close all
 % load('C:\Users\neosj\Dropbox\MATLAB\ODPCC\color_setting\color_set.mat')
 % 6.3853  21.31017406 48377966
 
-sessionFolder = {'C:\Users\chanh\Downloads\GaitomeRBD_data\addendum'};
+sessionFolder = {'C:\Users\chanh\Downloads\GaitomeMSACNew'};
 
 cd(char(sessionFolder))
 list = dir;
