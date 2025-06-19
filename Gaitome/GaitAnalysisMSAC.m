@@ -58,10 +58,10 @@ scoreGroup = [1, 6];             %
 %================================%
 
 % Plot gait parameter heatmap
-%PlotGaitParamHeat(cngdat_HC, scoreGroup, saveDir);
+PlotGaitParamHeat(cngdat_HC_pattern, scoreGroup, saveDir);
 
 %% SSM-PCA and scoring
-[PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, scoreGroup, saveDir, false);
+[PCA_eigen, e, GIS_Yz, C, explained] = GaitPatternPCA(tdat, cngdat, scoreGroup, saveDir, true);
 
 % Plot covariate matrix and explained components
 PlotPCAProcess(C, explained, scoreGroup, saveDir);
