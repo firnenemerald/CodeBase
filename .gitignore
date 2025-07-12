@@ -15,5 +15,5 @@
 /Proteomics/data/
 /PyTorch/
 
-/PillTong/.env
+/PillTong/secrets/
 /PillTong/sample_images/
